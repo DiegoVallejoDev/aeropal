@@ -27,6 +27,7 @@ body {
 
 .app-container {
   min-height: 100vh;
+  max-height: 100vh;
   background: transparent;
   font-family: 'IBM Plex Mono', monospace;
   color: var(--dark-gray);
@@ -386,7 +387,7 @@ body {
 
 @media (max-width: 480px) {
   .app-container {
-    padding: 1rem;
+    padding: 0;
   }
 
   .logo {
