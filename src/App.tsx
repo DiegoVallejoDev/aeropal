@@ -22,6 +22,35 @@ const App = () => {
   const timerRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
 
+  const wakeLock = useCallback(() => {
+    if ("wakeLock" in navigator) {
+      (async () => {
+        try {
+          const wakeLock = await (navigator as any).wakeLock.request("screen");
+          let releaseWakeLock: (() => void) | undefined;
+          releaseWakeLock = () => {
+            wakeLock.release().then(() => {
+              releaseWakeLock = undefined;
+            });
+          };
+          (navigator as any).wakeLock.release = releaseWakeLock;
+        } catch (err) {
+          console.error("Wake Lock error:", err);
+        }
+      }
+      )();
+    }
+  }
+    , []);
+
+  const wakeRelease = useCallback(() => {
+    if ("wakeLock" in navigator && (navigator as any).wakeLock.release) {
+      (navigator as any).wakeLock.release();
+    }
+  }
+    , []);
+
+
   const recipes = {
     classic: {
       coffee: 17,
@@ -342,6 +371,8 @@ const App = () => {
     setIsTimerActive(false);
     setTimeLeft(0);
     setHasStartedTimerForStep(false);
+
+    wakeRelease();
   };
 
   // Reset timer state when step changes
@@ -364,16 +395,9 @@ const App = () => {
       !hasStartedTimerForStep
     ) {
       startTimer(currentStepData.duration);
+      wakeLock();
     }
-  }, [
-    currentStep,
-    currentStepData,
-    isBrewingStarted,
-    timeLeft,
-    isTimerActive,
-    hasStartedTimerForStep,
-    startTimer,
-  ]);
+  }, [currentStep, currentStepData, isBrewingStarted, timeLeft, isTimerActive, hasStartedTimerForStep, startTimer, wakeLock]);
 
   const TimerComponent = ({
     duration,
