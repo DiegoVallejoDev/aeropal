@@ -18,7 +18,7 @@ export default defineConfig({
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              }
+              },
             },
           },
           {
@@ -40,50 +40,62 @@ export default defineConfig({
         short_name: "AeroPal",
         description:
           "Your perfect AeroPress brewing companion with guided recipes and timers",
-        theme_color: "#B8564F",
-        background_color: "#F8F5F0",
+        start_url: "/",
         display: "standalone",
+        background_color: "#F8F5F0",
+        theme_color: "#B8564F",
         orientation: "portrait-primary",
         scope: "/",
-        start_url: "/",
+        lang: "en-US",
+        categories: ["food", "lifestyle", "utilities"],
         icons: [
           {
-            src: "icons/icon-192x192.png",
+            src: "/icons/72.png",
+            sizes: "72x72",
+            type: "image/png",
+            purpose: "maskable any",
+          },
+          {
+            src: "/icons/96.png",
+            sizes: "96x96",
+            type: "image/png",
+            purpose: "maskable any",
+          },
+          {
+            src: "/icons/128.png",
+            sizes: "128x128",
+            type: "image/png",
+            purpose: "maskable any",
+          },
+          {
+            src: "/icons/144.png",
+            sizes: "144x144",
+            type: "image/png",
+            purpose: "maskable any",
+          },
+          {
+            src: "/icons/152.png",
+            sizes: "152x152",
+            type: "image/png",
+            purpose: "maskable any",
+          },
+          {
+            src: "/icons/192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "maskable any",
           },
           {
-            src: "icons/icon-512x512.png",
-            sizes: "512x512",
+            src: "/icons/384.png",
+            sizes: "384x384",
             type: "image/png",
             purpose: "maskable any",
           },
-        ],
-        shortcuts: [
           {
-            name: "Classic Brew",
-            short_name: "Classic",
-            description: "Start a classic AeroPress brew",
-            url: "/?recipe=classic",
-            icons: [
-              {
-                src: "icons/classic-shortcut.png",
-                sizes: "96x96",
-              },
-            ],
-          },
-          {
-            name: "Strong Brew",
-            short_name: "Strong",
-            description: "Start a strong AeroPress brew",
-            url: "/?recipe=strong",
-            icons: [
-              {
-                src: "icons/strong-shortcut.png",
-                sizes: "96x96",
-              },
-            ],
+            src: "/icons/512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable any",
           },
         ],
       },
