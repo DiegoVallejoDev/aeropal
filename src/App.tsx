@@ -11,7 +11,7 @@ import "./App.css";
 import { LottieAnimation } from "./LottieAnimation";
 
 const App = () => {
-  const [currentLanguage, setCurrentLanguage] = useState("en");
+  const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem("lang") || "en");
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedRecipe, setSelectedRecipe] = useState("classic");
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -460,8 +460,10 @@ const App = () => {
         <div className="header-controls">
           <button
             className="control-btn"
-            onClick={() =>
-              setCurrentLanguage(currentLanguage === "en" ? "es" : "en")
+            onClick={() => {
+              localStorage.setItem("lang", currentLanguage === "en" ? "es" : "en");
+              setCurrentLanguage(currentLanguage === "en" ? "es" : "en");
+            }
             }
           >
             {currentLanguage === "en" ? "ES" : "EN"}
@@ -472,7 +474,8 @@ const App = () => {
             onClick={() => setSoundEnabled(!soundEnabled)}
             title={t.soundToggle}
           >
-            {soundEnabled ? "🔊" : "🔇"}
+            {soundEnabled ? <i className="fa-solid fa-volume-high"></i>
+              : <i className="fa-solid fa-volume-off"></i>}
           </button>
         </div>
 
@@ -520,16 +523,17 @@ const App = () => {
               </div>
 
               <div className="step-text">{currentStepData.text}</div>
+              {currentStepData.tip && (
+                <div className="step-tip">{currentStepData.tip}</div>
+              )}
 
               {currentStepData.type === "timer" ? (
                 <>
+
                   <TimerComponent
                     duration={currentStepData.duration}
                     timeLeft={timeLeft}
                   />
-                  {currentStepData.tip && (
-                    <div className="step-tip">{currentStepData.tip}</div>
-                  )}
                 </>
               ) : currentStepData.type === "completion" ? (
                 <div className="completion-content">
@@ -547,9 +551,7 @@ const App = () => {
                   <button className="action-btn" onClick={nextStep}>
                     {currentStepData.button}
                   </button>
-                  {currentStepData.tip && (
-                    <div className="step-tip">{currentStepData.tip}</div>
-                  )}
+
                 </>
               )}
             </div>
