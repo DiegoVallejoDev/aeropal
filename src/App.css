@@ -17,18 +17,18 @@
 }
 
 html {
-  font-size: 10px;
+  font-size: 12px;
   /* 1rem = 16px */
 }
 
 body {
+  font-family: 'Inter', sans-serif;
   margin: 0;
 }
 
 .app-container {
   min-height: 100vh;
   background: transparent;
-  font-family: 'IBM Plex Mono', monospace;
   color: var(--dark-gray);
   padding: 0;
   max-width: 480px;
@@ -62,6 +62,7 @@ body {
   margin: 1em 1em 0;
   width: 5rem;
   font-size: 1.5rem;
+  box-shadow: 0 4px 12px var(--shadow-soft);
 }
 
 .control-btn:hover {
@@ -75,9 +76,8 @@ body {
 }
 
 .logo {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 3rem;
-  font-weight: 500;
+  font-size: 3.5rem;
+  font-weight: 700;
   letter-spacing: -1.5px;
   color: var(--dark-gray);
   margin-bottom: 8px;
@@ -87,23 +87,24 @@ body {
 .logo::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -.5rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 2px;
+  width: 5rem;
+  height: 4px;
   background: linear-gradient(90deg, var(--muted-red), var(--soft-red));
-  border-radius: 1px;
+  border-radius: 3px;
 }
 
 .subtitle {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Space Mono', monospace;
   font-size: 1rem;
   color: var(--brown);
   opacity: 0.7;
-  letter-spacing: 3px;
+  letter-spacing: .25em;
   text-transform: uppercase;
-  margin-top: 12px;
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
 .recipe-selection {
@@ -112,6 +113,8 @@ body {
   padding: 2rem;
   margin-bottom: 2rem;
   border: 1px solid var(--subtle-brown);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+  margin: 1rem;
 }
 
 .recipe-title {
@@ -150,7 +153,6 @@ body {
 .recipe-card.selected {
   background: linear-gradient(135deg, var(--muted-red), var(--soft-red));
   color: white;
-  border-color: var(--dark-brown);
 }
 
 .recipe-name {
@@ -231,7 +233,7 @@ body {
 }
 
 .lottie-animation-space {
-  width: 100%;
+  width: 96vw;
   height: 200px;
   display: flex;
   align-items: center;
@@ -239,6 +241,7 @@ body {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 20px;
   border: 1px solid var(--subtle-brown);
+  max-width: 500px;
 }
 
 .lottie {
@@ -277,7 +280,7 @@ body {
 }
 
 .timer-progress-circle {
-  transition: stroke-dashoffset 1s ease;
+  transition: stroke-dashoffset 1s ease-out;
 }
 
 .timer-display {
@@ -332,8 +335,7 @@ body {
 }
 
 .step-tip {
-  font-size: 0.75rem;
-  /* 12px ÷ 16 = 0.75rem */
+  font-size: 0.875rem;
   color: var(--brown);
   opacity: 0.7;
   font-style: italic;
@@ -382,14 +384,17 @@ body {
   border-radius: 3px;
   margin-top: 3rem;
   overflow: hidden;
-  position: relative;
-  bottom: 1em;
+  position: fixed;
+  bottom: 2em;
+  visibility: hidden;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 700px) {
   .progress-bar {
-    width: 100%;
+    margin-left: 2vw;
+    width: 96vw;
     max-width: none;
+    visibility: visible;
   }
 }
 
@@ -405,10 +410,6 @@ body {
   .app-container {
     padding: 0;
     overflow: hidden;
-  }
-
-  .logo {
-    font-size: 3rem;
   }
 
   .timer-circle-container {
