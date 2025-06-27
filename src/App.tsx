@@ -53,21 +53,21 @@ const App = () => {
 
   const recipes = {
     classic: {
-      coffee: 17,
-      bloom: 50,
-      totalWater: 250,
-      steepTime: 60,
-      pressTime: 25,
-    },
-    strong: {
-      coffee: 20,
-      bloom: 60,
-      totalWater: 250,
+      coffee: 14,
+      bloom: 30,
+      totalWater: 230,
       steepTime: 90,
       pressTime: 30,
     },
+    strong: {
+      coffee: 20,
+      bloom: 30,
+      totalWater: 250,
+      steepTime: 120,
+      pressTime: 30,
+    },
     light: {
-      coffee: 15,
+      coffee: 11,
       bloom: 45,
       totalWater: 250,
       steepTime: 45,

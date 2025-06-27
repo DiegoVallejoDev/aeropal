@@ -52,9 +52,9 @@ The app will be available at `http://localhost:3000`
 
 | Recipe      | Coffee | Water | Ratio  | Brew Time            |
 | ----------- | ------ | ----- | ------ | -------------------- |
-| **Classic** | 17g    | 250ml | 1:15   | Balanced & smooth    |
+| **Classic** | 14g    | 230ml | 1:16.4 | Balanced & smooth    |
 | **Strong**  | 20g    | 250ml | 1:12.5 | Bold & rich          |
-| **Light**   | 15g    | 250ml | 1:17   | Bright & clean       |
+| **Light**   | 11g    | 250ml | 1:17   | Bright & clean       |
 | **Iced**    | 22g    | 200ml | 1:9    | Concentrated for ice |
 
 ## 🛠️ Technical Details
