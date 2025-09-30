@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
+import './animations.css';
 import type { Recipe, Step } from './types';
 import {
   LanguageToggle,

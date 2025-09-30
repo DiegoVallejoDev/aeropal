@@ -1,0 +1,347 @@
+/* Enhanced Micro-interactions and Animations */
+
+/* Staggered fade-in animations for recipe grid */
+.recipe-grid .recipe-card {
+    animation: cardSlideUp 0.6s var(--ease-out-expo) both;
+}
+
+.recipe-grid .recipe-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.recipe-grid .recipe-card:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.recipe-grid .recipe-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.recipe-grid .recipe-card:nth-child(4) {
+    animation-delay: 0.25s;
+}
+
+.recipe-grid .recipe-card:nth-child(5) {
+    animation-delay: 0.3s;
+}
+
+.recipe-grid .recipe-card:nth-child(6) {
+    animation-delay: 0.35s;
+}
+
+@keyframes cardSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Enhanced button press feedback */
+.interactive-element {
+    transition: transform var(--transition-fast) var(--ease-out-back);
+}
+
+.interactive-element:active {
+    transform: scale(0.95);
+}
+
+/* Magnetic hover effect for important buttons */
+.magnetic-btn {
+    position: relative;
+    transition: transform var(--transition-medium) var(--ease-out-expo);
+}
+
+.magnetic-btn:hover {
+    transform: translateY(-2px);
+}
+
+.magnetic-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    border-radius: inherit;
+    opacity: 0.3;
+    transform: translateY(4px);
+    z-index: -1;
+    transition: all var(--transition-medium) var(--ease-out-expo);
+}
+
+.magnetic-btn:hover::before {
+    transform: translateY(6px);
+    opacity: 0.2;
+}
+
+/* Ripple effect for touch feedback */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.ripple:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Text reveal animations */
+.text-reveal {
+    overflow: hidden;
+}
+
+.text-reveal .text-content {
+    animation: textSlideUp 0.8s var(--ease-out-expo) both;
+}
+
+@keyframes textSlideUp {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Loading state with skeleton animation */
+.skeleton {
+    background: linear-gradient(90deg,
+            var(--light-brown) 25%,
+            rgba(255, 255, 255, 0.5) 50%,
+            var(--light-brown) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Enhanced focus states */
+.focus-enhanced:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 4px var(--soft-red);
+    animation: focusPulse 2s ease-in-out infinite;
+}
+
+@keyframes focusPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 4px var(--soft-red);
+    }
+
+    50% {
+        box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 6px rgba(197, 99, 95, 0.3);
+    }
+}
+
+/* Page transition effects */
+.fade-transition-enter {
+    opacity: 0;
+}
+
+.fade-transition-enter-active {
+    opacity: 1;
+    transition: opacity var(--transition-slow) var(--ease-out-expo);
+}
+
+.fade-transition-exit {
+    opacity: 1;
+}
+
+.fade-transition-exit-active {
+    opacity: 0;
+    transition: opacity var(--transition-medium) var(--ease-in-out-quad);
+}
+
+/* Slide transition effects */
+.slide-transition-enter {
+    transform: translateX(100%);
+}
+
+.slide-transition-enter-active {
+    transform: translateX(0);
+    transition: transform var(--transition-slow) var(--ease-out-expo);
+}
+
+.slide-transition-exit {
+    transform: translateX(0);
+}
+
+.slide-transition-exit-active {
+    transform: translateX(-100%);
+    transition: transform var(--transition-medium) var(--ease-in-out-quad);
+}
+
+/* Success animation */
+.success-bounce {
+    animation: successBounce 0.6s var(--ease-out-back);
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Error shake animation */
+.error-shake {
+    animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Count up animation for numbers */
+.count-up {
+    animation: countUp 0.8s var(--ease-out-expo);
+}
+
+@keyframes countUp {
+    0% {
+        transform: scale(0.5) rotateY(-90deg);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1) rotateY(0deg);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1) rotateY(0deg);
+        opacity: 1;
+    }
+}
+
+/* Floating elements */
+.float-gentle {
+    animation: floatGentle 4s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Progress bar enhanced animation */
+.progress-enhanced {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-enhanced::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+/* Glowing effect for active elements */
+.glow-effect {
+    position: relative;
+}
+
+.glow-effect::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--soft-red), var(--muted-red));
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+}
+
+.glow-effect:hover::after,
+.glow-effect:focus::after {
+    opacity: 0.3;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}

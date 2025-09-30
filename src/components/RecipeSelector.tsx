@@ -30,7 +30,7 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                 {builtInRecipes.map((recipe) => (
                     <button
                         key={recipe.id}
-                        className={`recipe-card ${selectedRecipe === recipe.id ? "selected" : ""}`}
+                        className={`recipe-card interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
                         onClick={() => onSelectRecipe(recipe.id)}
                     >
                         <div className="recipe-name">{recipe.name}</div>
@@ -48,7 +48,7 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                             {customRecipes.map((recipe) => (
                                 <button
                                     key={recipe.id}
-                                    className={`recipe-card custom ${selectedRecipe === recipe.id ? "selected" : ""}`}
+                                    className={`recipe-card custom interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
                                     onClick={() => onSelectRecipe(recipe.id)}
                                 >
                                     <div className="recipe-name">{recipe.name}</div>
@@ -65,11 +65,11 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
 
             {/* Action Buttons */}
             <div className="recipe-actions">
-                <button className="create-recipe-btn" onClick={onCreateRecipe}>
+                <button className="create-recipe-btn interactive-element ripple focus-enhanced" onClick={onCreateRecipe}>
                     {translation.createRecipe}
                 </button>
-                <button className="start-btn" onClick={onStartBrewing}>
-                    {translation.startBrewing}
+                <button className="start-btn magnetic-btn interactive-element ripple focus-enhanced glow-effect" onClick={onStartBrewing}>
+                    <span>{translation.startBrewing}</span>
                 </button>
             </div>
         </div>

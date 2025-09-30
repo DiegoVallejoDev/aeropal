@@ -10,6 +10,41 @@
   --subtle-brown: rgba(90, 62, 47, 0.15);
   --shadow-soft: rgba(90, 62, 47, 0.12);
   --shadow-medium: rgba(90, 62, 47, 0.18);
+
+  /* Animation timings */
+  --transition-fast: 0.2s;
+  --transition-medium: 0.3s;
+  --transition-slow: 0.5s;
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Border radius scale */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 #root {
@@ -33,6 +68,19 @@ body {
   padding: 0;
   max-width: 480px;
   margin: 0 auto;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media screen and (min-width: 768px) {
@@ -58,16 +106,45 @@ body {
   text-transform: uppercase;
   color: var(--brown);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 1em 1em 0;
   width: 5rem;
   font-size: 1.5rem;
   box-shadow: 0 4px 12px var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Apply enhanced styles to control buttons */
+.control-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 4px var(--soft-red);
+}
+
+.control-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
 }
 
 .control-btn:hover {
   background: rgba(255, 255, 255, 1);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px var(--shadow-medium);
+}
+
+.control-btn:hover::before {
+  left: 100%;
+}
+
+.control-btn:active {
+  transform: translateY(0) scale(0.98);
+  transition: transform 0.1s;
 }
 
 .header {
@@ -82,6 +159,19 @@ body {
   color: var(--dark-gray);
   margin-bottom: 8px;
   position: relative;
+  animation: logoEntrance 1s ease-out 0.3s both;
+}
+
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .logo::after {
@@ -94,6 +184,19 @@ body {
   height: 4px;
   background: linear-gradient(90deg, var(--muted-red), var(--soft-red));
   border-radius: 3px;
+  animation: underlineGrow 0.8s ease-out 0.8s both;
+}
+
+@keyframes underlineGrow {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+
+  100% {
+    width: 5rem;
+    opacity: 1;
+  }
 }
 
 .subtitle {
@@ -105,6 +208,19 @@ body {
   text-transform: uppercase;
   margin-top: 1rem;
   font-weight: 600;
+  animation: subtitleFade 0.8s ease-out 1s both;
+}
+
+@keyframes subtitleFade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
 }
 
 .recipe-selection {
@@ -115,6 +231,27 @@ body {
   border: 1px solid var(--subtle-brown);
   box-shadow: 0 4px 12px var(--shadow-soft);
   margin: 1rem;
+  animation: slideInUp 0.6s ease-out 0.4s both;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.recipe-selection:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .recipe-title {
@@ -140,19 +277,81 @@ body {
   border-radius: 16px;
   padding: 1.25rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: cardEntrance 0.5s ease-out both;
+}
+
+.recipe-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.recipe-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.recipe-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.recipe-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.recipe-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
 }
 
 .recipe-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px var(--shadow-soft);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px var(--shadow-soft);
   background: rgba(255, 255, 255, 1);
+  border-color: var(--light-brown);
+}
+
+.recipe-card:hover::before {
+  left: 100%;
 }
 
 .recipe-card.selected {
   background: linear-gradient(135deg, var(--muted-red), var(--soft-red));
   color: white;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(184, 86, 79, 0.3);
+  animation: selectedPulse 2s ease-in-out infinite;
+}
+
+@keyframes selectedPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 8px 20px rgba(184, 86, 79, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 8px 20px rgba(184, 86, 79, 0.5);
+  }
 }
 
 .recipe-name {
@@ -180,14 +379,66 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   box-shadow: 0 4px 12px var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
 }
 
 .start-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--shadow-medium);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 28px var(--shadow-medium);
+  background: linear-gradient(135deg, var(--soft-red), var(--muted-red));
+}
+
+.start-btn:hover::before {
+  left: 100%;
+}
+
+.start-btn:active {
+  transform: translateY(-1px) scale(1.01);
+  transition: transform 0.1s;
+}
+
+.start-btn.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.start-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: buttonSpin 1s linear infinite;
+}
+
+@keyframes buttonSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .brewing-content {
@@ -198,6 +449,19 @@ body {
   justify-content: flex-start;
   text-align: center;
   position: relative;
+  animation: brewingFadeIn 0.8s ease-out;
+}
+
+@keyframes brewingFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .step-counter {
@@ -207,6 +471,19 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 2rem;
+  animation: counterFadeIn 0.6s ease-out;
+}
+
+@keyframes counterFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
 }
 
 .step-text {
@@ -219,8 +496,20 @@ body {
   opacity: 0.7;
   font-style: italic;
   text-align: center;
-
   line-height: 1.4;
+  animation: textSlideIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes textSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
 }
 
 .timer-wrapper {
@@ -230,6 +519,19 @@ body {
   gap: 2rem;
   margin: 2rem 0;
   width: 100%;
+  animation: timerSlideIn 0.8s ease-out 0.3s both;
+}
+
+@keyframes timerSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .lottie-animation-space {
@@ -242,6 +544,27 @@ body {
   border-radius: 20px;
   border: 1px solid var(--subtle-brown);
   max-width: 500px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.lottie-animation-space:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--shadow-soft);
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .lottie {
@@ -270,6 +593,54 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: timerPulse 2s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.timer-circle-container.urgent {
+  animation: urgentShake 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes urgentShake {
+  0% {
+    transform: scale(1) rotate(-1deg);
+  }
+
+  100% {
+    transform: scale(1.03) rotate(1deg);
+  }
+}
+
+.timer-pulse-circle {
+  animation: pulseBeat 1s ease-in-out infinite;
+}
+
+@keyframes pulseBeat {
+  0% {
+    r: 100;
+    opacity: 0.3;
+  }
+
+  50% {
+    r: 110;
+    opacity: 0.1;
+  }
+
+  100% {
+    r: 120;
+    opacity: 0;
+  }
 }
 
 .timer-svg {
@@ -277,10 +648,12 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  /*filter: drop-shadow(0 4px 8px var(--shadow-soft));*/
 }
 
 .timer-progress-circle {
-  transition: stroke-dashoffset 1s ease-out;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+  /*filter: drop-shadow(0 0 4px var(--soft-red));*/
 }
 
 .timer-display {
@@ -300,6 +673,25 @@ body {
   font-weight: 500;
   color: var(--dark-gray);
   line-height: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 0 2px 4px var(--shadow-soft);
+}
+
+.timer-number.urgent {
+  color: var(--muted-red);
+  animation: urgentPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes urgentPulse {
+  0% {
+    transform: scale(1);
+    color: var(--muted-red);
+  }
+
+  100% {
+    transform: scale(1.05);
+    color: var(--soft-red);
+  }
 }
 
 .timer-label {
@@ -309,6 +701,12 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.timer-label.urgent {
+  color: var(--muted-red);
+  opacity: 1;
 }
 
 .action-btn {
@@ -319,19 +717,62 @@ body {
   padding: 1.25rem 2.5rem;
   font-family: inherit;
   font-size: 0.875rem;
-  /* 14px ÷ 16 = 0.875rem */
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px var(--shadow-soft);
   margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+  animation: actionBtnEntrance 0.6s ease-out 0.5s both;
+}
+
+@keyframes actionBtnEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  z-index: 0;
 }
 
 .action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--shadow-medium);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 24px var(--shadow-medium);
+}
+
+.action-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.action-btn:active {
+  transform: translateY(-1px) scale(1.02);
+  transition: transform 0.1s;
+}
+
+.action-btn span {
+  position: relative;
+  z-index: 1;
 }
 
 .step-tip {
@@ -342,6 +783,19 @@ body {
   text-align: center;
   max-width: 320px;
   line-height: 1.4;
+  animation: tipFadeIn 0.8s ease-out 0.4s both;
+}
+
+@keyframes tipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
 }
 
 .completion-content {
@@ -349,31 +803,93 @@ body {
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
+  animation: completionCelebration 1.2s ease-out;
+}
+
+@keyframes completionCelebration {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .completion-icon {
   font-size: 5rem;
   margin-bottom: 1.5rem;
   opacity: 0.8;
+  animation: celebrationBounce 2s ease-in-out infinite;
+}
+
+@keyframes celebrationBounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  40% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+
+  60% {
+    transform: translateY(-5px) rotate(5deg);
+  }
 }
 
 .completion-title {
   font-size: 1.75rem;
-  /* 28px ÷ 16 = 1.75rem */
   font-weight: 500;
   color: var(--dark-gray);
   margin-bottom: 0.75rem;
+  animation: titleSlideIn 0.8s ease-out 0.3s both;
+}
+
+@keyframes titleSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .completion-subtitle {
   font-size: 0.9375rem;
-  /* 15px ÷ 16 = 0.9375rem */
   color: var(--brown);
   opacity: 0.7;
   margin-bottom: 2rem;
   font-style: italic;
   max-width: 300px;
   line-height: 1.4;
+  animation: subtitleFadeIn 0.8s ease-out 0.6s both;
+}
+
+@keyframes subtitleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
 }
 
 .progress-bar {
@@ -387,6 +903,19 @@ body {
   position: fixed;
   bottom: 2em;
   visibility: hidden;
+  animation: progressBarSlideIn 0.6s ease-out;
+}
+
+@keyframes progressBarSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -398,12 +927,34 @@ body {
   }
 }
 
-
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--muted-red), var(--soft-red));
   border-radius: 3px;
-  transition: width 0.5s ease;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -430,6 +981,98 @@ body {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
+
+  /* Enhanced mobile animations */
+  .recipe-card:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .action-btn:hover,
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .control-btn:hover {
+    transform: translateY(-1px) scale(1.01);
+  }
+}
+
+/* Page transition effects */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+/* Improved focus states for accessibility */
+.control-btn:focus,
+.action-btn:focus,
+.start-btn:focus,
+.create-recipe-btn:focus,
+.recipe-card:focus {
+  outline: 2px solid var(--soft-red);
+  outline-offset: 2px;
+}
+
+/* Enhanced loading states */
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+/* Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced backdrop blur for better depth */
+.recipe-selection,
+.lottie-animation-space {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Subtle gradient overlays for depth */
+.app-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(197, 99, 95, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .aeropress-animation {
@@ -503,12 +1146,48 @@ body {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: createBtnSlide 0.6s ease-out 0.8s both;
+}
+
+@keyframes createBtnSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.create-recipe-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .create-recipe-btn:hover {
   background: var(--dark-brown);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(90, 62, 47, 0.3);
+}
+
+.create-recipe-btn:hover::before {
+  left: 100%;
+}
+
+.create-recipe-btn:active {
+  transform: translateY(0) scale(1);
+  transition: transform 0.1s;
 }
 
 /* Recipe Editor Styles */
@@ -779,6 +1458,19 @@ body {
   flex-direction: column;
   align-items: center;
   margin: 2rem 0;
+  animation: autoStepFadeIn 0.6s ease-out;
+}
+
+@keyframes autoStepFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auto-progress {
@@ -787,6 +1479,26 @@ body {
   align-items: center;
   gap: 1rem;
   color: var(--brown);
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--subtle-brown);
+  animation: breathe 2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
 }
 
 .loading-spinner {
@@ -795,16 +1507,45 @@ body {
   border: 3px solid var(--light-brown);
   border-top: 3px solid var(--soft-red);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: enhancedSpin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  position: relative;
 }
 
-@keyframes spin {
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--muted-red);
+  animation: enhancedSpin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+}
+
+@keyframes enhancedSpin {
   0% {
     transform: rotate(0deg);
+    border-top-color: var(--soft-red);
+  }
+
+  25% {
+    border-top-color: var(--muted-red);
+  }
+
+  50% {
+    transform: rotate(180deg);
+    border-top-color: var(--soft-red);
+  }
+
+  75% {
+    border-top-color: var(--muted-red);
   }
 
   100% {
     transform: rotate(360deg);
+    border-top-color: var(--soft-red);
   }
 }
 

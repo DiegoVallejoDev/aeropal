@@ -55,16 +55,22 @@ export const BrewingSteps: React.FC<BrewingStepsProps> = ({
     }
 
     return (
-        <div className="brewing-content">
-            <div className="step-counter">
-                {translation.stepOf
-                    .replace("{current}", (currentStep + 1).toString())
-                    .replace("{total}", steps.length.toString())}
+        <div className="brewing-content" key={currentStep}>
+            <div className="step-counter text-reveal">
+                <div className="text-content">
+                    {translation.stepOf
+                        .replace("{current}", (currentStep + 1).toString())
+                        .replace("{total}", steps.length.toString())}
+                </div>
             </div>
 
-            <div className="step-text">{currentStepData.text}</div>
+            <div className="step-text text-reveal">
+                <div className="text-content">{currentStepData.text}</div>
+            </div>
             {currentStepData.tip && (
-                <div className="step-tip">{currentStepData.tip}</div>
+                <div className="step-tip text-reveal">
+                    <div className="text-content">{currentStepData.tip}</div>
+                </div>
             )}
 
             {currentStepData.type === 'timer' ? (
@@ -74,8 +80,8 @@ export const BrewingSteps: React.FC<BrewingStepsProps> = ({
                     <div className="completion-icon">{currentStepData.icon}</div>
                     <div className="completion-title">{currentStepData.text}</div>
                     <div className="completion-subtitle">{currentStepData.subtitle}</div>
-                    <button className="action-btn" onClick={onResetApp}>
-                        {currentStepData.button}
+                    <button className="action-btn magnetic-btn interactive-element ripple focus-enhanced success-bounce" onClick={onResetApp}>
+                        <span>{currentStepData.button}</span>
                     </button>
                 </div>
             ) : currentStepData.type === 'automatic' ? (
@@ -86,14 +92,14 @@ export const BrewingSteps: React.FC<BrewingStepsProps> = ({
                     </div>
                 </div>
             ) : (
-                <button className="action-btn" onClick={onNextStep}>
-                    {currentStepData.button}
+                <button className="action-btn magnetic-btn interactive-element ripple focus-enhanced" onClick={onNextStep}>
+                    <span>{currentStepData.button}</span>
                 </button>
             )}
 
             <div className="progress-bar">
                 <div
-                    className="progress-fill"
+                    className="progress-fill progress-enhanced"
                     style={{ width: `${progress}%` }}
                 />
             </div>
