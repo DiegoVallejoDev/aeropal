@@ -13,19 +13,19 @@ export function useTimer(
   soundEnabled: boolean = false,
   playBeep?: (frequency?: number, duration?: number) => void
 ): UseTimerReturn {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const timeoutRef = useRef<number | null>(null);
   const onCompleteRef = useRef<(() => void) | undefined>(undefined);
   const [timeLeft, setTimeLeft] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
 
   const clearAllTimers = useCallback(() => {
     if (timerRef.current) {
-      clearInterval(timerRef.current);
+      window.clearInterval(timerRef.current);
       timerRef.current = null;
     }
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+      window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
   }, []);
@@ -37,10 +37,10 @@ export function useTimer(
       setTimeLeft(duration);
       setHasStarted(true);
 
-      timerRef.current = setInterval(() => {
+      timerRef.current = window.setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
-            clearInterval(timerRef.current!);
+            window.clearInterval(timerRef.current!);
             timerRef.current = null;
 
             if (playBeep && soundEnabled) {
@@ -48,7 +48,7 @@ export function useTimer(
             }
 
             // Call completion callback after a small delay
-            timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = window.setTimeout(() => {
               onCompleteRef.current?.();
               setHasStarted(false);
             }, 1000);
