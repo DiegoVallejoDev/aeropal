@@ -8,13 +8,32 @@ AeroPal is a sleek, step-by-step brewing guide for AeroPress coffee makers. Buil
 
 ## ✨ Features
 
-- **4 Brewing Recipes**: Classic, Strong, Light, and Iced coffee profiles
+### Core Brewing Features
+
+- **4 Built-in Recipes**: Classic, Strong, Light, and Iced coffee profiles
+- **Custom Recipe Creator**: Design and save your own brewing methods
+- **Flexible Step System**: Support for instruction, timer, automatic, and completion steps
+- **Smart Timers**: Automated timing with visual countdown and audio feedback
 - **Step-by-Step Guidance**: Clear instructions with visual progress tracking
-- **Smart Timers**: Automated timing for bloom, steep, and press phases
-- **Audio Feedback**: Optional sound notifications for timer completion
-- **Bilingual Support**: Available in English and Spanish
-- **Responsive Design**: Works seamlessly on mobile and desktop
+
+### Customization & Personalization
+
+- **Recipe Editor**: Full-featured interface for creating custom recipes
+- **Multiple Step Types**:
+  - **Instruction Steps**: Manual actions with custom button text
+  - **Timer Steps**: Automated countdown with customizable duration
+  - **Automatic Steps**: Self-advancing steps with delay
+  - **Completion Steps**: Custom celebration screens
+- **Recipe Management**: Save, edit, and delete custom recipes
+- **Persistent Storage**: All custom recipes saved locally
+
+### User Experience
+
+- **Bilingual Support**: Complete interface in English and Spanish
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
+- **Audio Feedback**: Optional sound notifications with customizable beeps
 - **Beautiful UI**: Clean, coffee-shop inspired design with smooth animations
+- **Modular Architecture**: Clean, maintainable codebase with TypeScript
 
 ## 🚀 Quick Start
 
@@ -36,17 +55,33 @@ cd aeropal
 pnpm install
 
 # Start development server
-pnpm start
+pnpm run dev
 ```
 
 The app will be available at `http://localhost:3000`
 
 ## 📱 Usage
 
-1. **Select Your Recipe**: Choose from Classic, Strong, Light, or Iced brewing profiles
+### Basic Brewing
+
+1. **Select Your Recipe**: Choose from built-in recipes or your custom creations
 2. **Start Brewing**: Follow the step-by-step instructions
-3. **Timer Guidance**: Let AeroPal handle the timing for bloom and steep phases
+3. **Timer Guidance**: Let AeroPal handle automatic timing and notifications
 4. **Perfect Cup**: Enjoy your expertly crafted AeroPress coffee
+
+### Creating Custom Recipes
+
+1. **Click "Create Recipe"**: Access the recipe editor from the home screen
+2. **Set Basic Parameters**: Configure coffee amount, water volume, and description
+3. **Design Custom Steps**: Add instruction, timer, automatic, or completion steps
+4. **Save & Brew**: Your custom recipe appears on the home screen ready to use
+
+### Step Types
+
+- **Instruction**: Manual steps with custom button text and tips
+- **Timer**: Automated countdown with duration control and audio alerts
+- **Automatic**: Self-advancing steps with customizable delays
+- **Completion**: Custom celebration screens with icons and messages
 
 ### Recipe Profiles
 
@@ -61,17 +96,22 @@ The app will be available at `http://localhost:3000`
 
 ### Built With
 
-- **React 18** - UI framework
-- **CSS-in-JS** - Styled with inline styles for component isolation
+- **React 18** - UI framework with hooks and modern patterns
+- **TypeScript** - Type-safe development with comprehensive interfaces
+- **CSS3** - Modern styling with CSS Grid, Flexbox, and animations
 - **Web Audio API** - For timer sound notifications
-- **Modern JavaScript** - ES6+ features with hooks
+- **LocalStorage API** - Persistent recipe storage
+- **Lottie React** - Rich animations and micro-interactions
 
-### Key Components
+### Architecture & Components
 
-- **Timer System**: Precise countdown with visual progress indicators
-- **State Management**: React hooks for brewing state and user preferences
+- **Modular Design**: Separated components, hooks, and utilities
+- **Custom Hooks**: `useTimer`, `useSound`, `useRecipes`, `useLanguage`
+- **Recipe Management**: Full CRUD operations with local persistence
+- **Type Safety**: Comprehensive TypeScript interfaces and types
+- **Component Library**: Reusable UI components (Timer, RecipeEditor, etc.)
+- **State Management**: React hooks with optimized re-rendering
 - **Responsive Design**: Mobile-first approach with CSS Grid and Flexbox
-- **Accessibility**: Keyboard navigation and screen reader support
 
 ## 🎨 Design System
 
@@ -142,14 +182,25 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 📋 Roadmap
 
-- [ ] **Lottie Animations**: Rich brewing animations
-- [ ] **Custom Recipes**: User-defined brewing profiles
-- [ ] **Brew History**: Track and rate your brews
-- [ ] **Export Recipes**: Share recipes with friends
-- [ ] **PWA Support**: Offline functionality
-- [ ] **More Languages**: French, German, Japanese
-- [ ] **Smart Notifications**: Push notifications for timing
-- [ ] **Brew Journal**: Notes and improvements tracking
+### ✅ Recently Added
+
+- [x] **Custom Recipes**: User-defined brewing profiles with full editor
+- [x] **Flexible Step System**: Multiple step types (instruction, timer, automatic, completion)
+- [x] **Recipe Management**: Save, edit, delete custom recipes
+- [x] **Modular Architecture**: Clean, maintainable TypeScript codebase
+- [x] **Enhanced Timer System**: Fixed timing with proper state management
+
+### 🔮 Future Features
+
+- [ ] **Recipe Import/Export**: Share recipes with JSON files
+- [ ] **Brew History**: Track and rate your brewing sessions
+- [ ] **Recipe Templates**: Pre-built templates for common brewing styles
+- [ ] **Advanced Timers**: Multiple concurrent timers for complex recipes
+- [ ] **PWA Support**: Offline functionality and app installation
+- [ ] **More Languages**: French, German, Japanese, Italian
+- [ ] **Smart Notifications**: Push notifications for timing reminders
+- [ ] **Brew Journal**: Notes, improvements, and tasting notes
+- [ ] **Recipe Community**: Share and discover recipes online
 
 ## 🐛 Known Issues
 
