@@ -74,7 +74,7 @@ export function useRecipes(language: Language) {
       description: "",
       isCustom: true,
       author: "User",
-      createdAt: new Date().toISOString(),
+      // No createdAt, so we can identify it as a new recipe
       coffee: 15,
       water: 250,
       bloomWater: 50,

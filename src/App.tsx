@@ -108,12 +108,14 @@ const App: React.FC = () => {
   };
 
   const handleDeleteRecipe = (recipeId: string) => {
-    deleteRecipe(recipeId);
-    setShowRecipeEditor(false);
-    setEditingRecipe(null);
-    // If we were viewing the deleted recipe, switch to classic
-    if (selectedRecipe === recipeId) {
-      setSelectedRecipe('classic');
+    if (window.confirm(t.confirmDeleteRecipe)) {
+      deleteRecipe(recipeId);
+      setShowRecipeEditor(false);
+      setEditingRecipe(null);
+      // If we were viewing the deleted recipe, switch to classic
+      if (selectedRecipe === recipeId) {
+        setSelectedRecipe('classic');
+      }
     }
   };
 
@@ -148,6 +150,7 @@ const App: React.FC = () => {
           onSelectRecipe={setSelectedRecipe}
           onStartBrewing={() => setIsBrewingStarted(true)}
           onCreateRecipe={handleCreateRecipe}
+          onDeleteRecipe={handleDeleteRecipe}
           translation={t}
         />
       ) : (

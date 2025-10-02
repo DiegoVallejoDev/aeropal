@@ -89,6 +89,9 @@ export interface Translation {
   moveUp: string;
   moveDown: string;
   deleteStep: string;
+  confirmDeleteRecipe: string;
+  enterRecipeName: string;
+  delete: string;
   recipes: {
     classic: { name: string; details: string };
     strong: { name: string; details: string };

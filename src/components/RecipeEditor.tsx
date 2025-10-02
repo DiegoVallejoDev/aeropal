@@ -14,7 +14,6 @@ export const RecipeEditor: React.FC<RecipeEditorProps> = ({
     translation,
     onSave,
     onCancel,
-    onDelete,
 }) => {
     const [editedRecipe, setEditedRecipe] = useState<Recipe>({ ...recipe });
 
@@ -95,7 +94,7 @@ export const RecipeEditor: React.FC<RecipeEditorProps> = ({
 
     const handleSave = () => {
         if (!editedRecipe.name.trim()) {
-            alert('Please enter a recipe name');
+            alert(translation.enterRecipeName);
             return;
         }
         onSave(editedRecipe);
@@ -314,14 +313,9 @@ export const RecipeEditor: React.FC<RecipeEditorProps> = ({
                 </div>
 
                 <div className="editor-actions">
-                    {onDelete && recipe.id && recipe.isCustom && (
-                        <button
-                            className="delete-recipe-btn"
-                            onClick={() => onDelete(recipe.id)}
-                        >
-                            {translation.deleteRecipe}
-                        </button>
-                    )}
+                    <div className="editor-actions-left">
+                        {/* nothing yet here */}
+                    </div>
                     <div className="editor-actions-right">
                         <button className="cancel-btn" onClick={onCancel}>
                             {translation.cancelEdit}

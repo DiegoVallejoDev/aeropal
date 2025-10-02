@@ -7,6 +7,7 @@ interface RecipeSelectorProps {
     onSelectRecipe: (recipeId: string) => void;
     onStartBrewing: () => void;
     onCreateRecipe: () => void;
+    onDeleteRecipe: (recipeId: string) => void;
     translation: Translation;
 }
 
@@ -16,6 +17,7 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
     onSelectRecipe,
     onStartBrewing,
     onCreateRecipe,
+    onDeleteRecipe,
     translation,
 }) => {
     const builtInRecipes = recipes.filter(r => !r.isCustom);
@@ -46,7 +48,7 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                         <div className="custom-recipes-title">{translation.customRecipes}</div>
                         <div className="recipe-grid">
                             {customRecipes.map((recipe) => (
-                                <button
+                                <div
                                     key={recipe.id}
                                     className={`recipe-card custom interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
                                     onClick={() => onSelectRecipe(recipe.id)}
@@ -56,7 +58,17 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                                     <div className="recipe-params">
                                         {recipe.coffee}g coffee • {recipe.water}ml water
                                     </div>
-                                </button>
+                                    <button
+                                        className="delete-recipe-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDeleteRecipe(recipe.id);
+                                        }}
+                                        title={translation.delete}
+                                    >
+                                        &#x1F5D1; {/* Trash can icon */}
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     </div>

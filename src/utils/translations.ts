@@ -27,6 +27,9 @@ export const translations: Record<string, Translation> = {
     moveUp: "Move Up",
     moveDown: "Move Down",
     deleteStep: "Delete Step",
+    confirmDeleteRecipe: "Are you sure you want to delete this recipe?",
+    enterRecipeName: "Please enter a recipe name",
+    delete: "Delete",
     recipes: {
       classic: {
         name: "Classic",
@@ -72,6 +75,9 @@ export const translations: Record<string, Translation> = {
     moveUp: "Subir",
     moveDown: "Bajar",
     deleteStep: "Eliminar Paso",
+    confirmDeleteRecipe: "¿Estás seguro de que quieres eliminar esta receta?",
+    enterRecipeName: "Por favor, introduce un nombre para la receta",
+    delete: "Eliminar",
     recipes: {
       classic: {
         name: "Clásico",
