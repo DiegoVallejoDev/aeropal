@@ -1,4 +1,8 @@
+﻿/* ============================================================================
+   DESIGN TOKENS & CSS VARIABLES
+   ========================================================================== */
 :root {
+  /* Colors */
   --cream: #F8F5F0;
   --warm-cream: #FDF9F4;
   --brown: #5A3E2F;
@@ -6,22 +10,24 @@
   --muted-red: #B8564F;
   --soft-red: #C5635F;
   --dark-gray: #0F0F0F;
+  --white: #FFFFFF;
+
+  /* Alpha Colors */
   --light-brown: rgba(90, 62, 47, 0.08);
   --subtle-brown: rgba(90, 62, 47, 0.15);
   --shadow-soft: rgba(90, 62, 47, 0.12);
   --shadow-medium: rgba(90, 62, 47, 0.18);
   --border-color: #E0D7D1;
-  --background-color-light: #FFFFFF;
 
-  /* Animation timings */
+  /* Animation Timings */
   --transition-fast: 0.2s;
   --transition-medium: 0.3s;
   --transition-slow: 0.5s;
-  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
-  /* Spacing scale */
+  /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -29,15 +35,36 @@
   --space-xl: 2rem;
   --space-2xl: 3rem;
 
-  /* Border radius scale */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  /* 6px */
+  --radius-md: 0.5rem;
+  /* 8px */
+  --radius-lg: 0.75rem;
+  /* 12px */
+  --radius-xl: 1rem;
+  /* 16px */
+  --radius-2xl: 1.25rem;
+  /* 20px */
 }
 
-/* Reduced motion preference */
+/* ============================================================================
+   BASE STYLES
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+#root {
+  background: linear-gradient(135deg, var(--warm-cream) 0%, var(--cream) 100%);
+}
+
+/* Reduced Motion Preference */
 @media (prefers-reduced-motion: reduce) {
 
   *,
@@ -49,46 +76,35 @@
   }
 }
 
-#root {
-  background: linear-gradient(135deg, var(--warm-cream) 0%, var(--cream) 100%);
-}
-
-html {
-  font-size: 12px;
-  /* 1rem = 16px */
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-}
-
+/* ============================================================================
+   LAYOUT
+   ========================================================================== */
 .app-container {
   min-height: 100vh;
-  background: transparent;
-  color: var(--dark-gray);
-  padding: 0;
   max-width: 480px;
   margin: 0 auto;
+  padding: 0;
+  color: var(--dark-gray);
+  background: transparent;
   animation: fadeInUp 0.8s ease-out;
+  position: relative;
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.app-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(197, 99, 95, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
-@media screen and (min-width: 768px) {
-  .app-container {
-    max-width: 700px;
-  }
+/* ============================================================================
+   HEADER
+   ========================================================================== */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .header-controls {
@@ -97,51 +113,47 @@ body {
   align-items: center;
 }
 
+/* ============================================================================
+   BUTTONS
+   ========================================================================== */
+
+/* Control Buttons (Language/Sound Toggle) */
 .control-btn {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--subtle-brown);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--brown);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 1em 1em 0;
   width: 5rem;
-  font-size: 1.5rem;
   box-shadow: 0 4px 12px var(--shadow-soft);
   position: relative;
   overflow: hidden;
-}
-
-/* Apply enhanced styles to control buttons */
-.control-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 4px var(--soft-red);
+  transition: all var(--transition-medium) var(--ease-smooth);
 }
 
 .control-btn::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
+  transform: translateX(-100%);
+  transition: transform 0.5s;
 }
 
 .control-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--white);
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 20px var(--shadow-medium);
 }
 
 .control-btn:hover::before {
-  left: 100%;
+  transform: translateX(100%);
 }
 
 .control-btn:active {
@@ -149,11 +161,12 @@ body {
   transition: transform 0.1s;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 3rem;
+.control-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--warm-cream), 0 0 0 4px var(--soft-red);
 }
 
+/* Logo & Subtitle */
 .logo {
   font-size: 3.5rem;
   font-weight: 700;
@@ -164,22 +177,10 @@ body {
   animation: logoEntrance 1s ease-out 0.3s both;
 }
 
-@keyframes logoEntrance {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.9);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 .logo::after {
   content: '';
   position: absolute;
-  bottom: -.5rem;
+  bottom: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
   width: 5rem;
@@ -189,40 +190,16 @@ body {
   animation: underlineGrow 0.8s ease-out 0.8s both;
 }
 
-@keyframes underlineGrow {
-  0% {
-    width: 0;
-    opacity: 0;
-  }
-
-  100% {
-    width: 5rem;
-    opacity: 1;
-  }
-}
-
 .subtitle {
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
   color: var(--brown);
   opacity: 0.7;
-  letter-spacing: .25em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   margin-top: 1rem;
   font-weight: 600;
   animation: subtitleFade 0.8s ease-out 1s both;
-}
-
-@keyframes subtitleFade {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  100% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
 }
 
 .recipe-selection {
@@ -895,17 +872,25 @@ body {
 }
 
 .progress-bar {
-  width: 100vw;
-  max-width: 100%;
+  width: 96vw;
+  max-width: 480px;
   height: 6px;
   background: var(--light-brown);
   border-radius: 3px;
-  margin-top: 3rem;
+  margin: 0 auto;
   overflow: hidden;
   position: fixed;
   bottom: 2em;
-  visibility: hidden;
+  left: 50%;
+  transform: translateX(-50%);
   animation: progressBarSlideIn 0.6s ease-out;
+  display: none;
+}
+
+@media (min-height: 1000px) {
+  .progress-bar {
+    display: block;
+  }
 }
 
 @keyframes progressBarSlideIn {
@@ -922,10 +907,13 @@ body {
 
 @media screen and (max-width: 700px) {
   .progress-bar {
-    margin-left: 2vw;
-    width: 96vw;
-    max-width: none;
-    visibility: visible;
+    max-width: 96vw;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .progress-bar {
+    max-width: 700px;
   }
 }
 
@@ -933,7 +921,7 @@ body {
   height: 100%;
   background: linear-gradient(90deg, var(--muted-red), var(--soft-red));
   border-radius: 3px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.8s var(--ease-smooth);
   position: relative;
   overflow: hidden;
 }
@@ -941,10 +929,7 @@ body {
 .progress-fill::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   animation: progressShimmer 2s infinite;
 }
@@ -956,6 +941,88 @@ body {
 
   100% {
     left: 100%;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY & UTILITIES
+   ========================================================================== */
+
+/* Focus States */
+.control-btn:focus,
+.action-btn:focus,
+.start-btn:focus,
+.create-recipe-btn:focus,
+.recipe-card:focus {
+  outline: 2px solid var(--soft-red);
+  outline-offset: 2px;
+}
+
+/* Loading State */
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+/* Enhanced Backdrop Blur */
+.recipe-selection,
+.lottie-animation-space {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+/* AeroPress Animation */
+.aeropress-animation {
+  animation: rotate-scale 3s infinite ease-in-out;
+  width: 100px;
+  height: auto;
+}
+
+@keyframes rotate-scale {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.1) rotate(180deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(360deg);
   }
 }
 
@@ -984,11 +1051,8 @@ body {
     gap: 0.75rem;
   }
 
-  /* Enhanced mobile animations */
-  .recipe-card:hover {
-    transform: translateY(-2px) scale(1.01);
-  }
-
+  /* Reduce hover effects on mobile for better UX */
+  .recipe-card:hover,
   .action-btn:hover,
   .start-btn:hover {
     transform: translateY(-2px) scale(1.01);
@@ -996,105 +1060,6 @@ body {
 
   .control-btn:hover {
     transform: translateY(-1px) scale(1.01);
-  }
-}
-
-/* Page transition effects */
-.page-transition-enter {
-  opacity: 0;
-  transform: translateX(100px);
-}
-
-.page-transition-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
-}
-
-.page-transition-exit {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.page-transition-exit-active {
-  opacity: 0;
-  transform: translateX(-100px);
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
-}
-
-/* Improved focus states for accessibility */
-.control-btn:focus,
-.action-btn:focus,
-.start-btn:focus,
-.create-recipe-btn:focus,
-.recipe-card:focus {
-  outline: 2px solid var(--soft-red);
-  outline-offset: 2px;
-}
-
-/* Enhanced loading states */
-.loading {
-  position: relative;
-  pointer-events: none;
-}
-
-.loading::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: inherit;
-}
-
-/* Smooth scrolling for better UX */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Enhanced backdrop blur for better depth */
-.recipe-selection,
-.lottie-animation-space {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* Subtle gradient overlays for depth */
-.app-container::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 20%, rgba(197, 99, 95, 0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.aeropress-animation {
-  animation: rotate-scale 3s infinite ease-in-out;
-  width: 100px;
-  /* Adjust size as needed */
-  height: auto;
-}
-
-@keyframes rotate-scale {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-
-  50% {
-    transform: scale(1.1) rotate(180deg);
-  }
-
-  100% {
-    transform: scale(1) rotate(360deg);
   }
 }
 
@@ -1140,15 +1105,19 @@ html {
 }
 
 .create-recipe-btn {
-  background: #a52a2a;
+  background: linear-gradient(135deg, var(--muted-red), var(--soft-red));
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 1.25rem 2rem;
+  border-radius: 16px;
+  font-size: 1.25rem;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 4px 12px var(--shadow-soft);
   position: relative;
   overflow: hidden;
   animation: createBtnSlide 0.6s ease-out 0.8s both;
@@ -1157,12 +1126,12 @@ html {
 @keyframes createBtnSlide {
   0% {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateY(20px) scale(0.9);
   }
 
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -1174,13 +1143,13 @@ html {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: left 0.6s;
 }
 
 .create-recipe-btn:hover {
-  background: var(--dark-brown);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 16px rgba(90, 62, 47, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 28px var(--shadow-medium);
+  background: linear-gradient(135deg, var(--soft-red), var(--muted-red));
 }
 
 .create-recipe-btn:hover::before {
@@ -1188,7 +1157,7 @@ html {
 }
 
 .create-recipe-btn:active {
-  transform: translateY(0) scale(1);
+  transform: translateY(-1px) scale(1.01);
   transition: transform 0.1s;
 }
 
@@ -1568,7 +1537,22 @@ html {
   }
 }
 
-/* Mobile Responsive */
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+/* Tablet and Up */
+@media screen and (min-width: 768px) {
+  .app-container {
+    max-width: 700px;
+  }
+
+  .progress-bar {
+    max-width: 700px;
+  }
+}
+
+/* Mobile Landscape / Tablet Portrait */
 @media (max-width: 768px) {
   .recipe-editor {
     margin: 0.5rem;
@@ -1591,5 +1575,50 @@ html {
   .editor-actions-right {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 700px) {
+  .progress-bar {
+    max-width: 96vw;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .timer-circle-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+
+  .timer-number {
+    font-size: 2.5rem;
+  }
+
+  .lottie-animation-space {
+    height: 160px;
+  }
+
+  .recipe-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Reduce hover effects on mobile for better UX */
+  .recipe-card:hover,
+  .action-btn:hover,
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .control-btn:hover {
+    transform: translateY(-1px) scale(1.01);
   }
 }

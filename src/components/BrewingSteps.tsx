@@ -26,7 +26,6 @@ export const BrewingSteps: React.FC<BrewingStepsProps> = ({
     onStartTimer,
 }) => {
     const currentStepData = steps[currentStep];
-    const progress = ((currentStep + 1) / steps.length) * 100;
 
     // Auto-start timer for timer steps
     useEffect(() => {
@@ -96,13 +95,6 @@ export const BrewingSteps: React.FC<BrewingStepsProps> = ({
                     <span>{currentStepData.button}</span>
                 </button>
             )}
-
-            <div className="progress-bar">
-                <div
-                    className="progress-fill progress-enhanced"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
         </div>
     );
 };
