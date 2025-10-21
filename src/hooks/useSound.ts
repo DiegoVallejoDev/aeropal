@@ -19,8 +19,13 @@ export function useSound(initialEnabled: boolean = true) {
       if (!soundEnabled) return;
 
       try {
+        // Define a type for window with webkitAudioContext
+        type WindowWithWebkitAudio = Window & {
+          webkitAudioContext?: typeof AudioContext;
+        };
+        
         const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+          (window as WindowWithWebkitAudio).webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
