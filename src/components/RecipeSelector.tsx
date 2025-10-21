@@ -29,16 +29,29 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
 
             {/* Built-in Recipes */}
             <div className="recipe-grid">
-                {builtInRecipes.map((recipe) => (
-                    <button
-                        key={recipe.id}
-                        className={`recipe-card interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
-                        onClick={() => onSelectRecipe(recipe.id)}
-                    >
-                        <div className="recipe-name">{recipe.name}</div>
-                        <div className="recipe-details">{recipe.description}</div>
-                    </button>
-                ))}
+                {builtInRecipes.map((recipe) => {
+                    // Add icons for each recipe type
+                    const recipeIcons: Record<string, string> = {
+                        'classic': '☕',
+                        'strong': '💪',
+                        'light': '✨',
+                        'iced': '🧊'
+                    };
+                    const icon = recipeIcons[recipe.id] || '☕';
+                    
+                    return (
+                        <button
+                            key={recipe.id}
+                            className={`recipe-card interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
+                            onClick={() => onSelectRecipe(recipe.id)}
+                            aria-label={`${recipe.name}: ${recipe.description}`}
+                        >
+                            <div className="recipe-icon">{icon}</div>
+                            <div className="recipe-name">{recipe.name}</div>
+                            <div className="recipe-details">{recipe.description}</div>
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Custom Recipes Section */}
@@ -52,7 +65,17 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                                     key={recipe.id}
                                     className={`recipe-card custom interactive-element ripple focus-enhanced ${selectedRecipe === recipe.id ? "selected" : ""}`}
                                     onClick={() => onSelectRecipe(recipe.id)}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label={`${recipe.name}: ${recipe.description}`}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            onSelectRecipe(recipe.id);
+                                        }
+                                    }}
                                 >
+                                    <div className="recipe-icon">🔧</div>
                                     <div className="recipe-name">{recipe.name}</div>
                                     <div className="recipe-details">{recipe.description}</div>
                                     <div className="recipe-params">
@@ -65,8 +88,9 @@ export const RecipeSelector: React.FC<RecipeSelectorProps> = ({
                                             onDeleteRecipe(recipe.id);
                                         }}
                                         title={translation.delete}
+                                        aria-label={`Delete ${recipe.name}`}
                                     >
-                                        &#x1F5D1; {/* Trash can icon */}
+                                        🗑️
                                     </button>
                                 </div>
                             ))}

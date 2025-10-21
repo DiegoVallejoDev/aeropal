@@ -10,8 +10,15 @@ export const LanguageToggle: React.FC<LanguageToggleProps> = ({
     currentLanguage,
     onToggle
 }) => {
+    const nextLanguage = currentLanguage === "en" ? "Spanish" : "English";
+    
     return (
-        <button className="control-btn" onClick={onToggle}>
+        <button 
+            className="control-btn" 
+            onClick={onToggle}
+            aria-label={`Change language to ${nextLanguage}`}
+            title={`Switch to ${nextLanguage}`}
+        >
             {currentLanguage === "en" ? "ES" : "EN"}
         </button>
     );
