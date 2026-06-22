@@ -4,16 +4,24 @@ import { LottieAnimation } from '../LottieAnimation';
 interface TimerProps {
     duration: number;
     timeLeft: number;
+    isPaused?: boolean;
 }
 
-export const Timer: React.FC<TimerProps> = ({ duration, timeLeft }) => {
+export const Timer: React.FC<TimerProps> = ({ duration, timeLeft, isPaused = false }) => {
     const progressPercent = timeLeft > 0 ? ((duration - timeLeft) / duration) * 100 : 0;
     const circumference = 2 * Math.PI * 100;
     const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
 
     // Determine if timer is in urgent state (last 10 seconds or 25% of duration, whichever is smaller)
     const urgentThreshold = Math.min(10, Math.floor(duration * 0.25));
-    const isUrgent = timeLeft <= urgentThreshold && timeLeft > 0;
+    const isUrgent = !isPaused && timeLeft <= urgentThreshold && timeLeft > 0;
+
+    // Show mm:ss for durations of a minute or more, plain seconds otherwise.
+    const showMinutes = timeLeft >= 60;
+    const displayValue = showMinutes
+        ? `${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}`
+        : `${timeLeft}`;
+    const displayLabel = showMinutes ? 'min' : 'sec';
 
     return (
         <div className="timer-wrapper">
@@ -23,7 +31,7 @@ export const Timer: React.FC<TimerProps> = ({ duration, timeLeft }) => {
                 </div>
             </div>
 
-            <div className={`timer-circle-container ${isUrgent ? 'urgent' : ''}`}>
+            <div className={`timer-circle-container ${isUrgent ? 'urgent' : ''} ${isPaused ? 'paused' : ''}`}>
                 <svg className="timer-svg" width="240" height="240">
                     {/* Background circle */}
                     <circle
@@ -65,10 +73,10 @@ export const Timer: React.FC<TimerProps> = ({ duration, timeLeft }) => {
                 </svg>
                 <div className="timer-display">
                     <span className={`timer-number count-up ${isUrgent ? 'urgent' : ''}`}>
-                        {timeLeft}
+                        {displayValue}
                     </span>
                     <span className={`timer-label ${isUrgent ? 'urgent' : ''}`}>
-                        sec
+                        {isPaused ? 'paused' : displayLabel}
                     </span>
                 </div>
             </div>

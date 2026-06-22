@@ -30,6 +30,14 @@ export const translations: Record<string, Translation> = {
     confirmDeleteRecipe: "Are you sure you want to delete this recipe?",
     enterRecipeName: "Please enter a recipe name",
     delete: "Delete",
+    back: "Back",
+    exit: "Exit",
+    pause: "Pause",
+    resume: "Resume",
+    skip: "Skip",
+    confirmExit: "Exit this brew and return to recipes?",
+    ratio: "ratio",
+    brewTime: "brew time",
     recipes: {
       classic: {
         name: "Classic",
@@ -78,6 +86,14 @@ export const translations: Record<string, Translation> = {
     confirmDeleteRecipe: "¿Estás seguro de que quieres eliminar esta receta?",
     enterRecipeName: "Por favor, introduce un nombre para la receta",
     delete: "Eliminar",
+    back: "Atrás",
+    exit: "Salir",
+    pause: "Pausar",
+    resume: "Reanudar",
+    skip: "Saltar",
+    confirmExit: "¿Salir de esta preparación y volver a las recetas?",
+    ratio: "ratio",
+    brewTime: "tiempo",
     recipes: {
       classic: {
         name: "Clásico",

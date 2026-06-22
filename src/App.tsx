@@ -27,7 +27,17 @@ const App: React.FC = () => {
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
 
   // Timer functionality
-  const { timeLeft, isActive: isTimerActive, hasStarted: hasStartedTimerForStep, startTimer: startTimerHook, stopTimer, resetTimer } = useTimer(soundEnabled, playBeep);
+  const {
+    timeLeft,
+    isActive: isTimerActive,
+    hasStarted: hasStartedTimerForStep,
+    isPaused: isTimerPaused,
+    startTimer: startTimerHook,
+    stopTimer,
+    resetTimer,
+    pauseTimer,
+    resumeTimer,
+  } = useTimer(soundEnabled, playBeep);
 
   // Wake lock functionality
   // Define a type for the wakeLock property
@@ -68,11 +78,22 @@ const App: React.FC = () => {
     setCurrentStep((prev) => prev + 1);
   };
 
+  const prevStep = () => {
+    stopTimer();
+    setCurrentStep((prev) => Math.max(0, prev - 1));
+  };
+
   const resetApp = () => {
     resetTimer();
     setCurrentStep(0);
     setIsBrewingStarted(false);
     wakeRelease();
+  };
+
+  const exitBrewing = () => {
+    if (currentStep === 0 || window.confirm(t.confirmExit)) {
+      resetApp();
+    }
   };
 
   // Get current recipe and steps
@@ -160,14 +181,20 @@ const App: React.FC = () => {
           timeLeft={timeLeft}
           isTimerActive={isTimerActive}
           hasStartedTimerForStep={hasStartedTimerForStep}
+          isTimerPaused={isTimerPaused}
           translation={t}
           onNextStep={nextStep}
+          onPrevStep={prevStep}
           onResetApp={resetApp}
+          onExit={exitBrewing}
           onStartTimer={startTimer}
+          onPauseTimer={pauseTimer}
+          onResumeTimer={resumeTimer}
         />
       )}
 
       {/* Recipe Editor Modal */}
+
       {showRecipeEditor && editingRecipe && (
         <RecipeEditor
           recipe={editingRecipe}
@@ -176,16 +203,6 @@ const App: React.FC = () => {
           onCancel={handleCancelEdit}
           onDelete={editingRecipe.isCustom ? handleDeleteRecipe : undefined}
         />
-      )}
-
-      {/* Progress bar (only show when brewing) */}
-      {isBrewingStarted && (
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-          />
-        </div>
       )}
     </div>
   );

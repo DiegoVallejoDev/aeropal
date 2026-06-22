@@ -1,4 +1,57 @@
-import type { Recipe, Step, BuiltInRecipeParams, Language } from "../types";
+import type {
+  Recipe,
+  Step,
+  TimerStep,
+  BuiltInRecipeParams,
+  Language,
+} from "../types";
+
+/** Formats a number of seconds as `m:ss`, or `Xs` for sub-minute durations. */
+export function formatDuration(seconds: number): string {
+  const safe = Math.max(0, Math.round(seconds));
+  const minutes = Math.floor(safe / 60);
+  const remainder = safe % 60;
+  if (minutes <= 0) {
+    return `${remainder}s`;
+  }
+  return `${minutes}:${remainder.toString().padStart(2, "0")}`;
+}
+
+export interface RecipeStats {
+  coffee: number;
+  water: number;
+  ratio: string;
+  brewSeconds: number;
+  brewTimeLabel: string;
+}
+
+/** Derives at-a-glance brew stats (dose, water, ratio, total timed duration). */
+export function getRecipeStats(recipe: Recipe): RecipeStats {
+  const ratioValue =
+    recipe.coffee > 0 ? Math.round(recipe.water / recipe.coffee) : 0;
+
+  let brewSeconds: number;
+  if (recipe.customSteps && recipe.customSteps.length > 0) {
+    brewSeconds = recipe.customSteps.reduce(
+      (sum, step) =>
+        sum + (step.type === "timer" ? (step as TimerStep).duration : 0),
+      0
+    );
+  } else {
+    brewSeconds =
+      (recipe.bloomTime || 30) +
+      (recipe.steepTime || 90) +
+      (recipe.pressTime || 30);
+  }
+
+  return {
+    coffee: recipe.coffee,
+    water: recipe.water,
+    ratio: `1:${ratioValue}`,
+    brewSeconds,
+    brewTimeLabel: formatDuration(brewSeconds),
+  };
+}
 
 export class RecipeStorage {
   private static readonly STORAGE_KEY = "aeropal_custom_recipes";

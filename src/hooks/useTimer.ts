@@ -4,9 +4,12 @@ interface UseTimerReturn {
   timeLeft: number;
   isActive: boolean;
   hasStarted: boolean;
+  isPaused: boolean;
   startTimer: (duration: number, onComplete?: () => void) => void;
   stopTimer: () => void;
   resetTimer: () => void;
+  pauseTimer: () => void;
+  resumeTimer: () => void;
 }
 
 export function useTimer(
@@ -18,6 +21,8 @@ export function useTimer(
   const onCompleteRef = useRef<(() => void) | undefined>(undefined);
   const [timeLeft, setTimeLeft] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const clearAllTimers = useCallback(() => {
     if (timerRef.current) {
@@ -30,53 +35,84 @@ export function useTimer(
     }
   }, []);
 
+  // Starts (or resumes) the countdown interval from the current timeLeft value.
+  const runInterval = useCallback(() => {
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current);
+    }
+
+    setIsActive(true);
+    timerRef.current = window.setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          window.clearInterval(timerRef.current!);
+          timerRef.current = null;
+          setIsActive(false);
+
+          if (playBeep && soundEnabled) {
+            playBeep(900, 600);
+          }
+
+          // Call completion callback after a small delay
+          timeoutRef.current = window.setTimeout(() => {
+            onCompleteRef.current?.();
+            setHasStarted(false);
+          }, 1000);
+          return 0;
+        }
+
+        // Beep for last 3 seconds
+        if (prev <= 3 && playBeep && soundEnabled) {
+          playBeep(1100, 200);
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+  }, [playBeep, soundEnabled]);
+
   const startTimer = useCallback(
     (duration: number, onComplete?: () => void) => {
       clearAllTimers();
       onCompleteRef.current = onComplete;
       setTimeLeft(duration);
       setHasStarted(true);
-
-      timerRef.current = window.setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            window.clearInterval(timerRef.current!);
-            timerRef.current = null;
-
-            if (playBeep && soundEnabled) {
-              playBeep(900, 600);
-            }
-
-            // Call completion callback after a small delay
-            timeoutRef.current = window.setTimeout(() => {
-              onCompleteRef.current?.();
-              setHasStarted(false);
-            }, 1000);
-            return 0;
-          }
-
-          // Beep for last 3 seconds
-          if (prev <= 3 && playBeep && soundEnabled) {
-            playBeep(1100, 200);
-          }
-
-          return prev - 1;
-        });
-      }, 1000);
+      setIsPaused(false);
+      runInterval();
     },
-    [clearAllTimers, playBeep, soundEnabled]
+    [clearAllTimers, runInterval]
   );
+
+  const pauseTimer = useCallback(() => {
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+      setIsActive(false);
+      setIsPaused(true);
+    }
+  }, []);
+
+  const resumeTimer = useCallback(() => {
+    if (!timerRef.current && hasStarted && timeLeft > 0) {
+      setIsPaused(false);
+      runInterval();
+    }
+  }, [hasStarted, timeLeft, runInterval]);
 
   const stopTimer = useCallback(() => {
     clearAllTimers();
     setTimeLeft(0);
     setHasStarted(false);
+    setIsActive(false);
+    setIsPaused(false);
   }, [clearAllTimers]);
 
   const resetTimer = useCallback(() => {
     clearAllTimers();
     setTimeLeft(0);
     setHasStarted(false);
+    setIsActive(false);
+    setIsPaused(false);
   }, [clearAllTimers]);
 
   // Cleanup on unmount
@@ -88,10 +124,13 @@ export function useTimer(
 
   return {
     timeLeft,
-    isActive: timerRef.current !== null,
+    isActive,
     hasStarted,
+    isPaused,
     startTimer,
     stopTimer,
     resetTimer,
+    pauseTimer,
+    resumeTimer,
   };
 }
