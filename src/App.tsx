@@ -159,39 +159,43 @@ const App: React.FC = () => {
         />
       </div>
 
-      <div className="header">
-        <div className="logo">aeroPal</div>
-        <div className="subtitle">{t.subtitle}</div>
-      </div>
+      <main className={`app-main ${isBrewingStarted ? 'brewing' : ''}`}>
+        {!isBrewingStarted && (
+          <div className="header">
+            <div className="logo">aeroPal</div>
+            <div className="subtitle">{t.subtitle}</div>
+          </div>
+        )}
 
-      {!isBrewingStarted ? (
-        <RecipeSelector
-          recipes={allRecipes}
-          selectedRecipe={selectedRecipe}
-          onSelectRecipe={setSelectedRecipe}
-          onStartBrewing={() => setIsBrewingStarted(true)}
-          onCreateRecipe={handleCreateRecipe}
-          onDeleteRecipe={handleDeleteRecipe}
-          translation={t}
-        />
-      ) : (
-        <BrewingSteps
-          steps={steps}
-          currentStep={currentStep}
-          timeLeft={timeLeft}
-          isTimerActive={isTimerActive}
-          hasStartedTimerForStep={hasStartedTimerForStep}
-          isTimerPaused={isTimerPaused}
-          translation={t}
-          onNextStep={nextStep}
-          onPrevStep={prevStep}
-          onResetApp={resetApp}
-          onExit={exitBrewing}
-          onStartTimer={startTimer}
-          onPauseTimer={pauseTimer}
-          onResumeTimer={resumeTimer}
-        />
-      )}
+        {!isBrewingStarted ? (
+          <RecipeSelector
+            recipes={allRecipes}
+            selectedRecipe={selectedRecipe}
+            onSelectRecipe={setSelectedRecipe}
+            onStartBrewing={() => setIsBrewingStarted(true)}
+            onCreateRecipe={handleCreateRecipe}
+            onDeleteRecipe={handleDeleteRecipe}
+            translation={t}
+          />
+        ) : (
+          <BrewingSteps
+            steps={steps}
+            currentStep={currentStep}
+            timeLeft={timeLeft}
+            isTimerActive={isTimerActive}
+            hasStartedTimerForStep={hasStartedTimerForStep}
+            isTimerPaused={isTimerPaused}
+            translation={t}
+            onNextStep={nextStep}
+            onPrevStep={prevStep}
+            onResetApp={resetApp}
+            onExit={exitBrewing}
+            onStartTimer={startTimer}
+            onPauseTimer={pauseTimer}
+            onResumeTimer={resumeTimer}
+          />
+        )}
+      </main>
 
       {/* Recipe Editor Modal */}
 

@@ -32,7 +32,7 @@ export const Timer: React.FC<TimerProps> = ({ duration, timeLeft, isPaused = fal
             </div>
 
             <div className={`timer-circle-container ${isUrgent ? 'urgent' : ''} ${isPaused ? 'paused' : ''}`}>
-                <svg className="timer-svg" width="240" height="240">
+                <svg className="timer-svg" viewBox="0 0 240 240" width="100%" height="100%">
                     {/* Background circle */}
                     <circle
                         cx="120"
