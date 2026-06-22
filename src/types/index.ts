@@ -92,6 +92,14 @@ export interface Translation {
   confirmDeleteRecipe: string;
   enterRecipeName: string;
   delete: string;
+  back: string;
+  exit: string;
+  pause: string;
+  resume: string;
+  skip: string;
+  confirmExit: string;
+  ratio: string;
+  brewTime: string;
   recipes: {
     classic: { name: string; details: string };
     strong: { name: string; details: string };
