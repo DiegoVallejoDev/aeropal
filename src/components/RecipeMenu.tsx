@@ -27,7 +27,8 @@ const CustomRow: React.FC<{
   onSelect: () => void;
   onEdit: () => void;
   onDelete: () => void;
-}> = ({ recipe, index, selected, t, onSelect, onEdit, onDelete }) => {
+  revealIndex: number;
+}> = ({ recipe, index, selected, t, onSelect, onEdit, onDelete, revealIndex }) => {
   const [confirming, setConfirming] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
@@ -50,7 +51,8 @@ const CustomRow: React.FC<{
 
   return (
     <div
-      className={`menu-row custom ${selected ? "selected" : ""}`}
+      className={`menu-row custom reveal ${selected ? "selected" : ""}`}
+      style={{ "--i": revealIndex } as React.CSSProperties}
       role="button"
       tabIndex={0}
       aria-pressed={selected}
@@ -115,12 +117,16 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
   return (
     <div className="menu">
       <section className="menu-hero">
-        <p className="eyebrow">{t.tagline}</p>
-        <h1 className="hero-title">{t.heroTitle}</h1>
-        <p className="hero-sub">{t.heroSub}</p>
+        <p className="eyebrow reveal">{t.tagline}</p>
+        <h1 className="hero-title reveal" style={{ "--i": 1 } as React.CSSProperties}>
+          {t.heroTitle}
+        </h1>
+        <p className="hero-sub reveal" style={{ "--i": 2 } as React.CSSProperties}>
+          {t.heroSub}
+        </p>
       </section>
 
-      <section className="menu-section">
+      <section className="menu-section reveal" style={{ "--i": 3 } as React.CSSProperties}>
         <p className="section-label">{t.menuLabel}</p>
         <div className="menu-list">
           {builtIns.map((recipe, i) => {
@@ -129,7 +135,8 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
               <button
                 key={recipe.id}
                 type="button"
-                className={`menu-row ${isSelected ? "selected" : ""}`}
+                className={`menu-row reveal ${isSelected ? "selected" : ""}`}
+                style={{ "--i": i + 4 } as React.CSSProperties}
                 onClick={() => onSelect(recipe.id)}
                 aria-pressed={isSelected}
               >
@@ -153,7 +160,10 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
         </div>
       </section>
 
-      <section className="menu-section">
+      <section
+        className="menu-section reveal"
+        style={{ "--i": builtIns.length + 5 } as React.CSSProperties}
+      >
         <p className="section-label">{t.yourRecipes}</p>
         <div className="menu-list">
           {customs.map((recipe, i) => (
@@ -161,6 +171,7 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
               key={recipe.id}
               recipe={recipe}
               index={builtIns.length + i + 1}
+              revealIndex={builtIns.length + 6 + i}
               selected={recipe.id === selectedId}
               t={t}
               onSelect={() => onSelect(recipe.id)}
@@ -168,7 +179,12 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
               onDelete={() => onDelete(recipe.id)}
             />
           ))}
-          <button type="button" className="menu-row ghost" onClick={onCreate}>
+          <button
+            type="button"
+            className="menu-row ghost reveal"
+            style={{ "--i": builtIns.length + customs.length + 7 } as React.CSSProperties}
+            onClick={onCreate}
+          >
             <span className="menu-idx">
               <Icon name="plus" size={14} />
             </span>
@@ -179,7 +195,10 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
         </div>
       </section>
 
-      <footer className="menu-cta">
+      <footer
+        className="menu-cta reveal"
+        style={{ "--i": builtIns.length + customs.length + 9 } as React.CSSProperties}
+      >
         <button type="button" className="begin-btn" onClick={onBegin}>
           <span className="begin-label">
             {t.begin}

@@ -145,12 +145,17 @@ export const BrewScreen: React.FC<BrewScreenProps> = ({
             <div className="auto-line">
               <div className="auto-line-fill" style={{ animationDuration: `${step.delay}ms` }} />
             </div>
-            <p className="auto-label">{t.autoAdvancing}…</p>
+            <p className="auto-label">{t.autoAdvancing}</p>
           </div>
         )}
 
         {step.type === "completion" && (
           <div className="done">
+            <div className="done-steam" aria-hidden="true">
+              <i className="steam-wisp h1" />
+              <i className="steam-wisp h2" />
+              <i className="steam-wisp h3" />
+            </div>
             {step.icon && <p className="done-icon">{step.icon}</p>}
             <p className="done-title">{step.text}</p>
             <p className="done-sub">{step.subtitle ?? t.doneSub}</p>
