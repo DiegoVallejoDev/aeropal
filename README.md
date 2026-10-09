@@ -32,6 +32,7 @@ AeroPal is a sleek, step-by-step brewing guide for AeroPress coffee makers. Buil
 - **Bilingual Support**: Complete interface in English and Spanish
 - **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
 - **Audio Feedback**: Optional sound notifications with a soft two-tone chime
+- **Animated Illustrations**: The original AeroPress animation (recolored to the palette, light and dark variants) plus hand-drawn animated step marks — pour, swirl, press — and steam on the finish screen
 - **Barista Mode**: The brew screen drops into a dark, low-glare room with a smooth sweeping timer ring
 - **Editorial Design**: Menu-style recipe list, Fraunces serif display type, hairline rules
 - **Modular Architecture**: Clean, maintainable codebase with TypeScript
@@ -101,6 +102,7 @@ The app will be available at `http://localhost:3000`
 - **TypeScript** - Type-safe development with comprehensive interfaces
 - **CSS3** - Modern styling with CSS Grid, Flexbox, and animations
 - **Web Audio API** - For timer sound notifications
+- **Lottie** - The AeroPress brew animation (lottie-react)
 - **LocalStorage API** - Persistent recipe storage
 - **Wake Lock API** - Keeps the screen awake while brewing
 - **vite-plugin-pwa** - Installable, offline-capable

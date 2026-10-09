@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import type { Dict } from "../i18n";
 import type { Recipe } from "../types";
 import { brewSeconds, formatClock, formatRatio } from "../lib/format";
+import { AeroPressAnim } from "./AeroPressAnim";
 import { Icon } from "./Icon";
 
 interface RecipeMenuProps {
@@ -117,13 +118,18 @@ export const RecipeMenu: React.FC<RecipeMenuProps> = ({
   return (
     <div className="menu">
       <section className="menu-hero">
-        <p className="eyebrow reveal">{t.tagline}</p>
-        <h1 className="hero-title reveal" style={{ "--i": 1 } as React.CSSProperties}>
-          {t.heroTitle}
-        </h1>
-        <p className="hero-sub reveal" style={{ "--i": 2 } as React.CSSProperties}>
-          {t.heroSub}
-        </p>
+        <div className="hero-copy">
+          <p className="eyebrow reveal">{t.tagline}</p>
+          <h1 className="hero-title reveal" style={{ "--i": 1 } as React.CSSProperties}>
+            {t.heroTitle}
+          </h1>
+          <p className="hero-sub reveal" style={{ "--i": 2 } as React.CSSProperties}>
+            {t.heroSub}
+          </p>
+        </div>
+        <AeroPressAnim
+          className="hero-anim reveal"
+        />
       </section>
 
       <section className="menu-section reveal" style={{ "--i": 3 } as React.CSSProperties}>

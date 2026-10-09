@@ -3,7 +3,9 @@ import type { Dict } from "../i18n";
 import type { Countdown } from "../hooks/useCountdown";
 import type { Recipe, Step } from "../types";
 import { brewSeconds, formatClock, formatRatio } from "../lib/format";
+import { AeroPressAnim } from "./AeroPressAnim";
 import { Icon } from "./Icon";
+import { StepGlyph } from "./StepGlyph";
 import { TimerRing } from "./TimerRing";
 
 interface BrewScreenProps {
@@ -102,6 +104,10 @@ export const BrewScreen: React.FC<BrewScreenProps> = ({
       <main className="brew-main" key={step.id + index}>
         {step.type !== "completion" && (
           <>
+            {step.type === "timer" && <StepGlyph stepId={step.id} />}
+            {step.type === "instruction" && (
+              <AeroPressAnim dark className="brew-anim" />
+            )}
             <p className="brew-text">{step.text}</p>
             {step.tip && <p className="brew-tip">{step.tip}</p>}
           </>
