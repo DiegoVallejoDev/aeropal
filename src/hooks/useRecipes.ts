@@ -1,80 +1,62 @@
-import { useState, useCallback, useEffect } from "react";
-import type { Recipe, Language } from "../types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Lang, Recipe } from "../types";
+import { BUILT_IN_RECIPES, builtInToRecipe } from "../data/recipes";
 import {
-  RecipeStorage,
-  BUILT_IN_RECIPES,
-  convertBuiltInToRecipe,
-} from "../utils/recipeManager";
+  loadCustomRecipes,
+  newRecipeId,
+  persistCustomRecipes,
+} from "../lib/storage";
 
-export function useRecipes(language: Language) {
-  const [customRecipes, setCustomRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load custom recipes on mount and language change
-  useEffect(() => {
-    setIsLoading(true);
-    const recipes = RecipeStorage.loadRecipes();
-    setCustomRecipes(recipes);
-    setIsLoading(false);
-  }, []);
-
-  // Get all recipes (built-in + custom)
-  const getAllRecipes = useCallback((): Recipe[] => {
-    const builtInRecipes = Object.entries(BUILT_IN_RECIPES).map(
-      ([key, params]) => convertBuiltInToRecipe(key, params, language)
-    );
-
-    return [...builtInRecipes, ...customRecipes];
-  }, [customRecipes, language]);
-
-  // Get recipe by ID
-  const getRecipeById = useCallback(
-    (id: string): Recipe | undefined => {
-      return getAllRecipes().find((recipe) => recipe.id === id);
-    },
-    [getAllRecipes]
+export function useRecipes(lang: Lang) {
+  const [customRecipes, setCustomRecipes] = useState<Recipe[]>(() =>
+    loadCustomRecipes()
   );
 
-  // Save a custom recipe
-  const saveRecipe = useCallback((recipe: Recipe) => {
-    const updatedRecipe = {
+  // persist every change after the initial load
+  const hydrated = useRef(false);
+  useEffect(() => {
+    if (!hydrated.current) {
+      hydrated.current = true;
+      return;
+    }
+    persistCustomRecipes(customRecipes);
+  }, [customRecipes]);
+
+  const allRecipes = useMemo<Recipe[]>(() => {
+    const builtIns = BUILT_IN_RECIPES.map((r) => builtInToRecipe(r, lang));
+    return [...builtIns, ...customRecipes];
+  }, [customRecipes, lang]);
+
+  const getRecipeById = useCallback(
+    (id: string) => allRecipes.find((r) => r.id === id),
+    [allRecipes]
+  );
+
+  const saveRecipe = useCallback((recipe: Recipe): Recipe => {
+    const stamped: Recipe = {
       ...recipe,
       isCustom: true,
-      createdAt: recipe.createdAt || new Date().toISOString(),
+      createdAt: recipe.createdAt ?? new Date().toISOString(),
     };
-
-    RecipeStorage.saveRecipe(updatedRecipe);
-
-    // Update local state
     setCustomRecipes((prev) => {
-      const existingIndex = prev.findIndex((r) => r.id === recipe.id);
-      if (existingIndex >= 0) {
-        const updated = [...prev];
-        updated[existingIndex] = updatedRecipe;
-        return updated;
-      } else {
-        return [...prev, updatedRecipe];
-      }
+      const index = prev.findIndex((r) => r.id === stamped.id);
+      return index >= 0
+        ? prev.map((r, i) => (i === index ? stamped : r))
+        : [...prev, stamped];
     });
-
-    return updatedRecipe;
+    return stamped;
   }, []);
 
-  // Delete a custom recipe
   const deleteRecipe = useCallback((recipeId: string) => {
-    RecipeStorage.deleteRecipe(recipeId);
     setCustomRecipes((prev) => prev.filter((r) => r.id !== recipeId));
   }, []);
 
-  // Create a new recipe template
-  const createNewRecipe = useCallback((): Recipe => {
+  const draftRecipe = useCallback((): Recipe => {
     return {
-      id: RecipeStorage.generateId(),
+      id: newRecipeId(),
       name: "",
       description: "",
       isCustom: true,
-      author: "User",
-      // No createdAt, so we can identify it as a new recipe
       coffee: 15,
       water: 250,
       bloomWater: 50,
@@ -86,12 +68,10 @@ export function useRecipes(language: Language) {
   }, []);
 
   return {
-    customRecipes,
-    allRecipes: getAllRecipes(),
+    allRecipes,
     getRecipeById,
     saveRecipe,
     deleteRecipe,
-    createNewRecipe,
-    isLoading,
+    draftRecipe,
   };
 }

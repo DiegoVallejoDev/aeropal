@@ -31,8 +31,10 @@ AeroPal is a sleek, step-by-step brewing guide for AeroPress coffee makers. Buil
 
 - **Bilingual Support**: Complete interface in English and Spanish
 - **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
-- **Audio Feedback**: Optional sound notifications with customizable beeps
-- **Beautiful UI**: Clean, coffee-shop inspired design with smooth animations
+- **Audio Feedback**: Optional sound notifications with a soft two-tone chime
+- **Animated Illustrations**: The original AeroPress animation (recolored to the palette, light and dark variants) plus hand-drawn animated step marks — pour, swirl, press — and steam on the finish screen
+- **Barista Mode**: The brew screen drops into a dark, low-glare room with a smooth sweeping timer ring
+- **Editorial Design**: Menu-style recipe list, Fraunces serif display type, hairline rules
 - **Modular Architecture**: Clean, maintainable codebase with TypeScript
 
 ## 🚀 Quick Start
@@ -100,27 +102,28 @@ The app will be available at `http://localhost:3000`
 - **TypeScript** - Type-safe development with comprehensive interfaces
 - **CSS3** - Modern styling with CSS Grid, Flexbox, and animations
 - **Web Audio API** - For timer sound notifications
+- **Lottie** - The AeroPress brew animation (lottie-react)
 - **LocalStorage API** - Persistent recipe storage
-- **Lottie React** - Rich animations and micro-interactions
+- **Wake Lock API** - Keeps the screen awake while brewing
+- **vite-plugin-pwa** - Installable, offline-capable
 
 ### Architecture & Components
 
-- **Modular Design**: Separated components, hooks, and utilities
-- **Custom Hooks**: `useTimer`, `useSound`, `useRecipes`, `useLanguage`
-- **Recipe Management**: Full CRUD operations with local persistence
+- **Modular Design**: Separated components, hooks, data, and lib utilities
+- **Custom Hooks**: `useCountdown`, `useSound`, `useRecipes`, `useLanguage`, `useWakeLock`
+- **Drift-Free Timing**: `requestAnimationFrame` + `performance.now()` countdown
+- **Recipe Management**: Full CRUD operations with validated local persistence
 - **Type Safety**: Comprehensive TypeScript interfaces and types
-- **Component Library**: Reusable UI components (Timer, RecipeEditor, etc.)
-- **State Management**: React hooks with optimized re-rendering
-- **Responsive Design**: Mobile-first approach with CSS Grid and Flexbox
+- **Zero Icon/Animation Dependencies**: Inline SVG icon set, CSS-only motion
 
 ## 🎨 Design System
 
-AeroPal uses a carefully crafted design system inspired by coffee culture:
+AeroPal uses an editorial design system inspired by café menus and coffee print culture:
 
-- **Colors**: Warm creams, rich browns, and accent reds
-- **Typography**: IBM Plex Mono for a modern, technical feel
-- **Animations**: Smooth transitions and micro-interactions
-- **Layout**: Clean, centered design with generous whitespace
+- **Colors**: Warm paper and espresso ink, with a single burnt-sienna accent; the brew screen inverts to a dark, low-glare room
+- **Typography**: Fraunces for display, Inter for interface, tabular numerals for the timer
+- **Details**: Hairline rules, uppercase micro-labels, restrained motion
+- **Layout**: A single centered column that reads like a menu
 
 ## 🌐 Internationalization
 

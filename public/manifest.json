@@ -4,12 +4,16 @@
   "description": "Your perfect AeroPress brewing companion with guided recipes and timers",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F8F5F0",
-  "theme_color": "#B8564F",
+  "background_color": "#F6F1E8",
+  "theme_color": "#150E08",
   "orientation": "any",
   "scope": "/",
   "lang": "en-US",
-  "categories": ["food", "lifestyle", "utilities"],
+  "categories": [
+    "food",
+    "lifestyle",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/icons/72.png",
