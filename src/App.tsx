@@ -1,211 +1,150 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import './App.css';
-import './animations.css';
-import type { Recipe, Step } from './types';
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import type { Recipe } from "./types";
+import { dict } from "./i18n";
+import { buildSteps } from "./lib/steps";
+import { formatClock } from "./lib/format";
 import {
-  LanguageToggle,
-  SoundToggle,
-  RecipeSelector,
-  BrewingSteps,
-  RecipeEditor
-} from './components';
-import { useLanguage, useSound, useRecipes, useTimer } from './hooks';
-import { translations } from './utils/translations';
-import { StepGenerator } from './utils/recipeManager';
-
+  useCountdown,
+  useLanguage,
+  useRecipes,
+  useSound,
+  useWakeLock,
+} from "./hooks";
+import { BrewScreen, RecipeMenu, RecipeSheet, TopBar } from "./components";
 
 const App: React.FC = () => {
-  const { currentLanguage, toggleLanguage } = useLanguage();
-  const { soundEnabled, toggleSound, playBeep } = useSound();
-  const { allRecipes, getRecipeById, saveRecipe, deleteRecipe, createNewRecipe } = useRecipes(currentLanguage);
+  const { lang, toggleLanguage } = useLanguage();
+  const t = dict[lang];
+  const { soundEnabled, toggleSound, tick, chime } = useSound();
+  const { allRecipes, getRecipeById, saveRecipe, deleteRecipe, draftRecipe } =
+    useRecipes(lang);
+  const countdown = useCountdown();
 
-  // App state
-  const [currentStep, setCurrentStep] = useState(0);
-  const [selectedRecipe, setSelectedRecipe] = useState('classic');
-  const [isBrewingStarted, setIsBrewingStarted] = useState(false);
-  const [showRecipeEditor, setShowRecipeEditor] = useState(false);
-  const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
+  const [view, setView] = useState<"menu" | "brew">("menu");
+  const [recipeId, setRecipeId] = useState("classic");
+  const [stepIndex, setStepIndex] = useState(0);
+  const [editing, setEditing] = useState<{ recipe: Recipe; isNew: boolean } | null>(
+    null
+  );
+  const brewStartRef = useRef(0);
 
-  // Timer functionality
-  const {
-    timeLeft,
-    isActive: isTimerActive,
-    hasStarted: hasStartedTimerForStep,
-    isPaused: isTimerPaused,
-    startTimer: startTimerHook,
-    stopTimer,
-    resetTimer,
-    pauseTimer,
-    resumeTimer,
-  } = useTimer(soundEnabled, playBeep);
+  useWakeLock(view === "brew");
 
-  // Wake lock functionality
-  // Define a type for the wakeLock property
-  type WakeLockType = {
-    request(type: 'screen'): Promise<unknown>;
-    release?(): void;
-  };
+  const recipe = getRecipeById(recipeId) ?? allRecipes[0];
+  const steps = useMemo<ReturnType<typeof buildSteps>>(
+    () => (recipe ? buildSteps(recipe, lang) : []),
+    [recipe, lang]
+  );
 
-  const wakeLock = useCallback(async () => {
-    const nav = navigator as Navigator & { wakeLock?: WakeLockType };
-    if (nav.wakeLock) {
-      try {
-        await nav.wakeLock.request('screen');
-      } catch (err) {
-        console.error('Wake Lock error:', err);
-      }
-    }
+  const nextStep = useCallback(() => {
+    countdown.stop();
+    setStepIndex((i) => Math.min(i + 1, Math.max(steps.length - 1, 0)));
+  }, [countdown, steps.length]);
+
+  const prevStep = useCallback(() => {
+    countdown.stop();
+    setStepIndex((i) => Math.max(0, i - 1));
+  }, [countdown]);
+
+  const beginBrew = useCallback(() => {
+    brewStartRef.current = Date.now();
+    countdown.stop();
+    setStepIndex(0);
+    setView("brew");
+  }, [countdown]);
+
+  const exitBrew = useCallback(() => {
+    if (stepIndex > 0 && !window.confirm(t.confirmExit)) return;
+    countdown.stop();
+    setStepIndex(0);
+    setView("menu");
+  }, [countdown, stepIndex, t.confirmExit]);
+
+  const finishBrew = useCallback(() => {
+    countdown.stop();
+    setStepIndex(0);
+    setView("menu");
+  }, [countdown]);
+
+  const elapsedLabel = formatClock(
+    brewStartRef.current ? (Date.now() - brewStartRef.current) / 1000 : 0
+  );
+
+  const handleCreate = useCallback(() => {
+    setEditing({ recipe: draftRecipe(), isNew: true });
+  }, [draftRecipe]);
+
+  const handleEdit = useCallback((r: Recipe) => {
+    setEditing({ recipe: r, isNew: false });
   }, []);
 
-  const wakeRelease = useCallback(() => {
-    const nav = navigator as Navigator & { wakeLock?: WakeLockType };
-    if (nav.wakeLock && typeof nav.wakeLock.release === 'function') {
-      nav.wakeLock.release();
-    }
-  }, []);
+  const handleSave = useCallback(
+    (r: Recipe) => {
+      const saved = saveRecipe(r);
+      setEditing(null);
+      setRecipeId(saved.id);
+    },
+    [saveRecipe]
+  );
 
-  // Timer management
-  const startTimer = useCallback((duration: number) => {
-    startTimerHook(duration, () => {
-      // Auto-advance to next step after timer completes
-      setCurrentStep((s) => s + 1);
-    });
-    wakeLock();
-  }, [startTimerHook, wakeLock]);
+  const handleDelete = useCallback(
+    (id: string) => {
+      deleteRecipe(id);
+      if (recipeId === id) setRecipeId("classic");
+    },
+    [deleteRecipe, recipeId]
+  );
 
-  const nextStep = () => {
-    stopTimer();
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const prevStep = () => {
-    stopTimer();
-    setCurrentStep((prev) => Math.max(0, prev - 1));
-  };
-
-  const resetApp = () => {
-    resetTimer();
-    setCurrentStep(0);
-    setIsBrewingStarted(false);
-    wakeRelease();
-  };
-
-  const exitBrewing = () => {
-    if (currentStep === 0 || window.confirm(t.confirmExit)) {
-      resetApp();
-    }
-  };
-
-  // Get current recipe and steps
-  const currentRecipe = getRecipeById(selectedRecipe);
-  const steps: Step[] = useMemo(() => currentRecipe ?
-    StepGenerator.generateDefaultSteps(currentRecipe, currentLanguage) : [],
-    [currentRecipe, currentLanguage]);
-
-  // Reset timer state when step changes (but only if not a timer step)
-  useEffect(() => {
-    const currentStepData = steps[currentStep];
-    if (currentStepData?.type !== 'timer') {
-      resetTimer();
-    }
-  }, [currentStep, resetTimer, steps]);
-
-  // Translation
-  const t = translations[currentLanguage];
-
-  // Recipe management handlers
-  const handleCreateRecipe = () => {
-    const newRecipe = createNewRecipe();
-    setEditingRecipe(newRecipe);
-    setShowRecipeEditor(true);
-  };
-
-  const handleSaveRecipe = (recipe: Recipe) => {
-    const savedRecipe = saveRecipe(recipe);
-    setShowRecipeEditor(false);
-    setEditingRecipe(null);
-    // Select the saved recipe
-    setSelectedRecipe(savedRecipe.id);
-  };
-
-  const handleDeleteRecipe = (recipeId: string) => {
-    if (window.confirm(t.confirmDeleteRecipe)) {
-      deleteRecipe(recipeId);
-      setShowRecipeEditor(false);
-      setEditingRecipe(null);
-      // If we were viewing the deleted recipe, switch to classic
-      if (selectedRecipe === recipeId) {
-        setSelectedRecipe('classic');
-      }
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setShowRecipeEditor(false);
-    setEditingRecipe(null);
-  };
+  const sounds = useMemo(() => ({ tick, chime }), [tick, chime]);
 
   return (
-    <div className="app-container">
-      <div className="header-controls">
-        <LanguageToggle
-          currentLanguage={currentLanguage}
-          onToggle={toggleLanguage}
-        />
-        <SoundToggle
+    <div className={`app ${view === "brew" ? "is-brewing" : ""}`}>
+      {view === "menu" && (
+        <TopBar
+          lang={lang}
           soundEnabled={soundEnabled}
-          onToggle={toggleSound}
-          title={t.soundToggle}
+          t={t}
+          onToggleLanguage={toggleLanguage}
+          onToggleSound={toggleSound}
         />
-      </div>
+      )}
 
-      <main className={`app-main ${isBrewingStarted ? 'brewing' : ''}`}>
-        {!isBrewingStarted && (
-          <div className="header">
-            <div className="logo">aeroPal</div>
-            <div className="subtitle">{t.subtitle}</div>
-          </div>
-        )}
-
-        {!isBrewingStarted ? (
-          <RecipeSelector
-            recipes={allRecipes}
-            selectedRecipe={selectedRecipe}
-            onSelectRecipe={setSelectedRecipe}
-            onStartBrewing={() => setIsBrewingStarted(true)}
-            onCreateRecipe={handleCreateRecipe}
-            onDeleteRecipe={handleDeleteRecipe}
-            translation={t}
-          />
-        ) : (
-          <BrewingSteps
+      {view === "menu" ? (
+        <RecipeMenu
+          recipes={allRecipes}
+          selectedId={recipe?.id ?? "classic"}
+          t={t}
+          onSelect={setRecipeId}
+          onBegin={beginBrew}
+          onCreate={handleCreate}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      ) : (
+        recipe && (
+          <BrewScreen
+            recipe={recipe}
             steps={steps}
-            currentStep={currentStep}
-            timeLeft={timeLeft}
-            isTimerActive={isTimerActive}
-            hasStartedTimerForStep={hasStartedTimerForStep}
-            isTimerPaused={isTimerPaused}
-            translation={t}
-            onNextStep={nextStep}
-            onPrevStep={prevStep}
-            onResetApp={resetApp}
-            onExit={exitBrewing}
-            onStartTimer={startTimer}
-            onPauseTimer={pauseTimer}
-            onResumeTimer={resumeTimer}
+            index={Math.min(stepIndex, steps.length - 1)}
+            countdown={countdown}
+            t={t}
+            elapsedLabel={elapsedLabel}
+            sounds={sounds}
+            onNext={nextStep}
+            onPrev={prevStep}
+            onExit={exitBrew}
+            onFinish={finishBrew}
           />
-        )}
-      </main>
+        )
+      )}
 
-      {/* Recipe Editor Modal */}
-
-      {showRecipeEditor && editingRecipe && (
-        <RecipeEditor
-          recipe={editingRecipe}
-          translation={t}
-          onSave={handleSaveRecipe}
-          onCancel={handleCancelEdit}
-          onDelete={editingRecipe.isCustom ? handleDeleteRecipe : undefined}
+      {editing && (
+        <RecipeSheet
+          recipe={editing.recipe}
+          isNew={editing.isNew}
+          t={t}
+          onSave={handleSave}
+          onCancel={() => setEditing(null)}
         />
       )}
     </div>

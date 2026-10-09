@@ -1,28 +1,24 @@
-import { useState, useCallback } from "react";
-import type { Language } from "../types";
+import { useCallback, useState } from "react";
+import type { Lang } from "../types";
+import { LANG_KEY, readPref, writePref } from "../lib/storage";
 
 export function useLanguage() {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(() => {
-    const stored = localStorage.getItem("aeropal_language");
-    return (stored as Language) || "en";
-  });
+  const [lang, setLang] = useState<Lang>(() =>
+    readPref(LANG_KEY, "en") === "es" ? "es" : "en"
+  );
+
+  const setLanguage = useCallback((next: Lang) => {
+    setLang(next);
+    writePref(LANG_KEY, next);
+  }, []);
 
   const toggleLanguage = useCallback(() => {
-    setCurrentLanguage((prev) => {
-      const newLang: Language = prev === "en" ? "es" : "en";
-      localStorage.setItem("aeropal_language", newLang);
-      return newLang;
+    setLang((prev) => {
+      const next: Lang = prev === "en" ? "es" : "en";
+      writePref(LANG_KEY, next);
+      return next;
     });
   }, []);
 
-  const setLanguage = useCallback((lang: Language) => {
-    setCurrentLanguage(lang);
-    localStorage.setItem("aeropal_language", lang);
-  }, []);
-
-  return {
-    currentLanguage,
-    toggleLanguage,
-    setLanguage,
-  };
+  return { lang, setLanguage, toggleLanguage };
 }
