@@ -1,7 +1,7 @@
 {
-  "name": "AeroPal - AeroPress Companion",
+  "name": "AeroPal — AeroPress companion",
   "short_name": "AeroPal",
-  "description": "Your perfect AeroPress brewing companion with guided recipes and timers",
+  "description": "Guided AeroPress recipes with a calm, precise brew timer. Every second counts.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F6F1E8",
