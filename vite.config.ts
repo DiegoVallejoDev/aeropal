@@ -36,10 +36,10 @@ export default defineConfig({
       },
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
-        name: "AeroPal - AeroPress Companion",
+        name: "AeroPal — AeroPress companion",
         short_name: "AeroPal",
         description:
-          "Your perfect AeroPress brewing companion with guided recipes and timers",
+          "Guided AeroPress recipes with a calm, precise brew timer. Every second counts.",
         start_url: "/",
         display: "standalone",
         background_color: "#F6F1E8",
